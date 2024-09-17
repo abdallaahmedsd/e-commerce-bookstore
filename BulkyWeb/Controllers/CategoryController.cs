@@ -1,5 +1,5 @@
-﻿using BulkyWeb.Data;
-using BulkyWeb.Models;
+﻿using Bulky.DataAccess.Data;
+using Bulky.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BulkyWeb.Controllers
@@ -102,5 +102,18 @@ namespace BulkyWeb.Controllers
 
 			return View();
 		}
+
+		public IActionResult Details(int? id)
+		{
+            if (id == null || id <= 0)
+                return NotFound();
+
+            var category = _context.Categories.Find(id);
+
+            if (category == null)
+                return NotFound();
+
+            return View(category);
+        }
 	}
 }
