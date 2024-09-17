@@ -8,14 +8,12 @@
     <div class="card-header bg-secondary bg-gradient ml-0 py-2">
         <div class="row">
             <div class="col-12 text-center">
-                <h2 class="text-white py-2">Delete Category</h2>
+                <h2 class="text-white py-2">Category Details</h2>
             </div>
         </div>
     </div>
     <div class="card-body p-4">
         <div class="border p-3 mt-4">
-            <h4 class="text-primary">Category Details</h4>
-            <hr />
             <dl class="row">
                 <dt class="col-sm-2">
                     @Html.DisplayNameFor(model => model.Id)
@@ -37,18 +35,9 @@
                 </dd>
             </dl>
             <hr />
-            <form asp-controller="Category" asp-action="Delete">
-                <div class="row">
-                    <div class="col-6 col-md-3">
-                        <button type="submit" class="btn btn-danger form-control">Delete</button>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <a class="btn btn-outline-secondary border form-control" asp-controller="Category" asp-action="Index">
-                            Back to List
-                        </a>
-                    </div>
-                </div>
-            </form>
+            <a class="btn btn-primary" asp-area="Admin" asp-controller="Category" asp-action="Index">
+                Back to List
+            </a>
         </div>
     </div>
 </div>

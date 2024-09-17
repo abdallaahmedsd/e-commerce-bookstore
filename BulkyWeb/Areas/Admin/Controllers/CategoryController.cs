@@ -2,8 +2,9 @@
 using Bulky.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BulkyWeb.Controllers
+namespace BulkyWeb.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -178,8 +179,8 @@ namespace BulkyWeb.Controllers
                 // Log exception (ex) here
                 TempData["error"] = "An error occurred while retrieving category details.";
 
-               /* ErrorViewModel model = new ErrorViewModel() { RequestId = Guid.NewGuid().ToString() };
-                return View("Error", model);*/
+                /* ErrorViewModel model = new ErrorViewModel() { RequestId = Guid.NewGuid().ToString() };
+                 return View("Error", model);*/
 
                 return View("Error");
             }
