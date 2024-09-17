@@ -1,4 +1,6 @@
 using Bulky.DataAccess.Data;
+using Bulky.DataAccess.Repository;
+using Bulky.DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("constr"));
 });
+
+#region Custom Services
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+#endregion
 
 var app = builder.Build();
 
