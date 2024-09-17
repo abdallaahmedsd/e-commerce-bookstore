@@ -2,10 +2,8 @@
 
 namespace Bulky.DataAccess.Repository.IRepository
 {
-    public interface ICategoryRepository : IRepository<Category>
+    public interface ICategoryRepository : IGenericRepository<Category>
     {
         void Update(Category entity);
-
-        void Save(); 
     }
 }
