@@ -21,7 +21,7 @@ namespace Bulky.DataAccess.Repository
 
         public void Update(Category entity)
         {
-            _context.Update(entity);
+            _context.Categories.Update(entity);
         }
     }
 }
