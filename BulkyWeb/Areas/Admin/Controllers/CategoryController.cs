@@ -1,5 +1,6 @@
 ﻿using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models;
+using BulkyWeb.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BulkyWeb.Areas.Admin.Controllers
@@ -18,8 +19,21 @@ namespace BulkyWeb.Areas.Admin.Controllers
         {
             try
             {
-                var lstCategories = await _unitOfWork.Category.GetAllOrderedByDisplayOrder();
-                return View(lstCategories);
+                var lstCategoriesModels = await _unitOfWork.Category.GetAllOrderedByDisplayOrder();
+
+                var lstCategoriesViewModels = new List<CategoryViewModel>();
+
+                foreach (var category in lstCategoriesModels)
+                {
+                    lstCategoriesViewModels.Add(new CategoryViewModel
+                    { 
+                        Id = category.Id,
+                        Name = category.Name,
+                        DisplayOrder = category.DisplayOrder 
+                    });
+                }
+
+                return View(lstCategoriesViewModels);
             }
             catch (Exception ex)
             {
@@ -35,13 +49,18 @@ namespace BulkyWeb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Category category)
+        public async Task<IActionResult> Create(CategoryViewModel categoryViewModel)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await _unitOfWork.Category.AddAsync(category);
+                    await _unitOfWork.Category.AddAsync(new Category 
+                    { 
+                        Name = categoryViewModel.Name,
+                        DisplayOrder = categoryViewModel.DisplayOrder
+                    });
+
                     await _unitOfWork.SaveAsync();
                     TempData["success"] = "Category created successfully!";
                     return RedirectToAction("Index");
@@ -54,7 +73,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
                 }
             }
 
-            return View(category);
+            return View(categoryViewModel);
         }
 
         public async Task<IActionResult> Edit(int id)
@@ -64,12 +83,19 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
             try
             {
-                var category = await _unitOfWork.Category.GetByIdAsync(id);
+                var categoryModel = await _unitOfWork.Category.GetByIdAsync(id);
 
-                if (category == null)
+                if (categoryModel == null)
                     return NotFound();
 
-                return View(category);
+                var categoryViewModel = new CategoryViewModel
+                {
+                    Id = categoryModel.Id,
+                    Name = categoryModel.Name,
+                    DisplayOrder = categoryModel.DisplayOrder
+                };
+
+                return View(categoryViewModel);
             }
             catch (Exception ex)
             {
@@ -80,7 +106,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, Category updateCategory)
+        public async Task<IActionResult> Edit(int id, CategoryViewModel updateCategory)
         {
             if (ModelState.IsValid)
             {
@@ -117,12 +143,19 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
             try
             {
-                var category = await _unitOfWork.Category.GetByIdAsync(id);
+                var categoryModel = await _unitOfWork.Category.GetByIdAsync(id);
 
-                if (category == null)
+                if (categoryModel == null)
                     return NotFound();
 
-                return View(category);
+                var categoryViewModel = new CategoryViewModel
+                {
+                    Id = categoryModel.Id,
+                    Name = categoryModel.Name,
+                    DisplayOrder = categoryModel.DisplayOrder
+                };
+
+                return View(categoryViewModel);
             }
             catch (Exception ex)
             {
@@ -135,33 +168,6 @@ namespace BulkyWeb.Areas.Admin.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeletePost(int id)
         {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    var category = await _unitOfWork.Category.GetByIdAsync(id);
-
-                    if (category == null)
-                        return NotFound();
-
-                    _unitOfWork.Category.Remove(category);
-                    await _unitOfWork.SaveAsync();
-                    TempData["success"] = "Category deleted successfully!";
-                    return RedirectToAction("Index");
-                }
-                catch (Exception ex)
-                {
-                    // Log exception (ex) here
-                    TempData["error"] = "An error occurred while deleting the category.";
-                    return View("Error");
-                }
-            }
-
-            return View();
-        }
-
-        public async Task<IActionResult> Details(int id)
-        {
             if (id <= 0)
                 return NotFound();
 
@@ -172,7 +178,39 @@ namespace BulkyWeb.Areas.Admin.Controllers
                 if (category == null)
                     return NotFound();
 
-                return View(category);
+                _unitOfWork.Category.Remove(category);
+                await _unitOfWork.SaveAsync();
+                TempData["success"] = "Category deleted successfully!";
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                // Log exception (ex) here
+                TempData["error"] = "An error occurred while deleting the category.";
+                return View("Error");
+            }
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            if (id <= 0)
+                return NotFound();
+
+            try
+            {
+                var categoryModel = await _unitOfWork.Category.GetByIdAsync(id);
+
+                if (categoryModel == null)
+                    return NotFound();
+
+                var categoryViewModel = new CategoryViewModel
+                {
+                    Id = categoryModel.Id,
+                    Name = categoryModel.Name,
+                    DisplayOrder = categoryModel.DisplayOrder
+                };
+
+                return View(categoryViewModel);
             }
             catch (Exception ex)
             {
