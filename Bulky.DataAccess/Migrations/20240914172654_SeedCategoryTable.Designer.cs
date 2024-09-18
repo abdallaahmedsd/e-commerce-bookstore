@@ -24,7 +24,7 @@ namespace Bulky.DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("BulkyWeb.Models.Category", b =>
+            modelBuilder.Entity("BulkyWeb.Models.TbCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()

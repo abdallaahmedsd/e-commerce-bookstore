@@ -2,8 +2,8 @@
 
 namespace Bulky.DataAccess.Repository.IRepository
 {
-    public interface IProductRepository : IGenericRepository<Product>
+    public interface IProductRepository : IGenericRepository<TbProduct>
     {
-        void Update(Product entity);
+        void Update(TbProduct entity);
     }
 }

@@ -55,7 +55,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
             {
                 try
                 {
-                    await _unitOfWork.Category.AddAsync(new Category 
+                    await _unitOfWork.Category.AddAsync(new TbCategory 
                     { 
                         Name = categoryViewModel.Name,
                         DisplayOrder = categoryViewModel.DisplayOrder

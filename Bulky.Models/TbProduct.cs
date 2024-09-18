@@ -1,6 +1,6 @@
 ﻿namespace Bulky.Models
 {
-    public class Product
+    public class TbProduct
     {
         public int Id { get; set; }
 

@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Bulky.DataAccess.Data.Configurations
 {
-    internal class ProductConfiguration : IEntityTypeConfiguration<Product>
+    internal class ProductConfiguration : IEntityTypeConfiguration<TbProduct>
     {
-        public void Configure(EntityTypeBuilder<Product> builder)
+        public void Configure(EntityTypeBuilder<TbProduct> builder)
         {
             builder.HasKey(x => x.Id);
 
@@ -46,7 +46,7 @@ namespace Bulky.DataAccess.Data.Configurations
             builder.HasData(SeedProducts());
         }
 
-        private static List<Product> SeedProducts() => new List<Product>
+        private static List<TbProduct> SeedProducts() => new List<TbProduct>
         {
             new() {
                 Id = 1,

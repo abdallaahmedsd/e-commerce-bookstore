@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Bulky.DataAccess.Data.Configurations
 {
-    internal class CategoryConfiguration : IEntityTypeConfiguration<Category>
+    internal class CategoryConfiguration : IEntityTypeConfiguration<TbCategory>
     {
-        public void Configure(EntityTypeBuilder<Category> builder)
+        public void Configure(EntityTypeBuilder<TbCategory> builder)
         {
             builder.HasKey(x => x.Id);
 
@@ -19,13 +19,13 @@ namespace Bulky.DataAccess.Data.Configurations
             builder.HasData(SeedCategory());
         }
 
-        private static List<Category> SeedCategory()
+        private static List<TbCategory> SeedCategory()
         {
             return
             [
-                new Category { Id = 1, Name = "Action", DisplayOrder = 1},
-                new Category { Id = 2, Name = "SciFi", DisplayOrder = 2},
-                new Category { Id = 3, Name = "History", DisplayOrder = 3}
+                new TbCategory { Id = 1, Name = "Action", DisplayOrder = 1},
+                new TbCategory { Id = 2, Name = "SciFi", DisplayOrder = 2},
+                new TbCategory { Id = 3, Name = "History", DisplayOrder = 3}
             ];
         }
     }
