@@ -61,31 +61,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/toastr.js/toastr.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
-    @* Toastr script for handling notifications *@
-    <script>
-        $(document).ready(function () {
-            var successMessage = $('#toastr-success-message').data('message');
-            if (successMessage) {
-                toastr.success(successMessage);
-            }
-
-            var errorMessage = $('#toastr-error-message').data('message');
-            if (errorMessage) {
-                toastr.error(errorMessage);
-            }
-
-            var warningMessage = $('#toastr-warning-message').data('message');
-            if (warningMessage) {
-                toastr.warning(warningMessage);
-            }
-
-            var infoMessage = $('#toastr-info-message').data('message');
-            if (infoMessage) {
-                toastr.info(infoMessage);
-            }
-        });
-    </script>
+    <script src="~/js/notifications.js" type="module"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
