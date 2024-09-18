@@ -18,7 +18,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
         {
             try
             {
-                var lstCategories = await _unitOfWork.Category.GetAllAsync();
+                var lstCategories = await _unitOfWork.Category.GetAllOrderedByDisplayOrder();
                 return View(lstCategories);
             }
             catch (Exception ex)
