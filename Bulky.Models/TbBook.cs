@@ -22,5 +22,7 @@
 
         public int CatgoryId { get; set; }
         public TbCategory Category { get; set; } = null!;
+
+        public string ImageUrl { get; set; } = null!;
     }
 }

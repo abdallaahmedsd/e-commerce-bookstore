@@ -41,6 +41,13 @@ namespace Bulky.DataAccess.Data.Configurations
                 .HasPrecision(18, 2)
                 .IsRequired();
 
+            builder.Property(x => x.CatgoryId)
+                .IsRequired();
+
+            builder.Property(x => x.ImageUrl)
+                .HasMaxLength(200)
+                .IsRequired();
+
             builder.HasOne(x => x.Category)
                 .WithMany(x => x.Books)
                 .HasForeignKey(x => x.CatgoryId)
@@ -65,6 +72,7 @@ namespace Bulky.DataAccess.Data.Configurations
                 Price50 = 85,
                 Price100 = 80,
                 CatgoryId = 1,
+                ImageUrl = ""
             },
             new() {
                 Id = 2,
@@ -77,6 +85,7 @@ namespace Bulky.DataAccess.Data.Configurations
                 Price50 = 25,
                 Price100 = 20,
                 CatgoryId = 1,
+                ImageUrl = ""
             },
             new() {
                 Id = 3,
@@ -89,6 +98,7 @@ namespace Bulky.DataAccess.Data.Configurations
                 Price50 = 40,
                 Price100 = 35,
                 CatgoryId = 2,
+                ImageUrl = ""
             },
             new() {
                 Id = 4,
@@ -101,6 +111,7 @@ namespace Bulky.DataAccess.Data.Configurations
                 Price50 = 60,
                 Price100 = 55,
                 CatgoryId = 3,
+                ImageUrl = ""
             },
             new() {
                 Id = 5,
@@ -113,6 +124,7 @@ namespace Bulky.DataAccess.Data.Configurations
                 Price50 = 25,
                 Price100 = 20,
                 CatgoryId = 2,
+                ImageUrl = ""
             },
             new() {
                 Id = 6,
@@ -125,6 +137,7 @@ namespace Bulky.DataAccess.Data.Configurations
                 Price50 = 22,
                 Price100 = 20,
                 CatgoryId = 2,
+                ImageUrl = ""
             }
         };
     }
