@@ -4,18 +4,18 @@ using Bulky.Models;
 
 namespace Bulky.DataAccess.Repository
 {
-    public class ProductRepository : GenericRepository<TbProduct>, IProductRepository
+    public class BookRepository : GenericRepository<TbBook>, IBookRepository
     {
         private readonly AppDbContext _context;
 
-        public ProductRepository(AppDbContext context) : base(context)
+        public BookRepository(AppDbContext context) : base(context)
         {
             _context = context;
         }
 
-        public void Update(TbProduct entity)
+        public void Update(TbBook entity)
         {
-            _context.Products.Update(entity);
+            _context.Books.Update(entity);
         }
     }
 }

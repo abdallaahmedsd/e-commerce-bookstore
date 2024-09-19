@@ -4,7 +4,7 @@
     {
         ICategoryRepository Category { get; }
 
-        IProductRepository Product { get; }
+        IBookRepository Book { get; }
 
         Task SaveAsync();
     }

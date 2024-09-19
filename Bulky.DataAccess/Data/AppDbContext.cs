@@ -9,7 +9,7 @@ namespace Bulky.DataAccess.Data
 
         public DbSet<TbCategory> Categories { get; set; }
 
-        public DbSet<TbProduct> Products { get; set; }    
+        public DbSet<TbBook> Books { get; set; }    
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -7,9 +7,9 @@ a.navbar-brand {
   word-break: break-all;
 }
 
-/*a {
-  color: #0077cc;
-}*/
+.main {
+  margin-bottom: 90px !important;
+}
 
 .btn-primary {
   color: #fff;

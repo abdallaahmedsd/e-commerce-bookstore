@@ -1,6 +1,6 @@
 ﻿@model CategoryViewModel
 
-<div class="card shadow border-0 mt-4">
+<div class="card shadow border-0">
     <div class="card-header bg-secondary bg-gradient ml-0 py-2">
         <div class="row">
             <div class="col-12 text-center">
@@ -9,7 +9,7 @@
         </div>
     </div>
     <div class="card-body p-4">
-        <form method="post" class="row">
+        <form asp-area="Admin" asp-controller="Category" asp-action="Create" method="post" class="row">
             <div class="border p-3">
                 @*<div asp-validation-summary="ModelOnly"></div>*@
                 <div class="form-floating py-2 col-12">

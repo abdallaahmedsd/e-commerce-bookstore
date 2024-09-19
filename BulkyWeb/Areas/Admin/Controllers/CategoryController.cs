@@ -1,6 +1,6 @@
 ﻿using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models;
-using BulkyWeb.ViewModels;
+using BulkyWeb.Areas.Admin.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BulkyWeb.Areas.Admin.Controllers
@@ -49,6 +49,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CategoryViewModel categoryViewModel)
         {
             if (ModelState.IsValid)
@@ -106,6 +107,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, CategoryViewModel updateCategory)
         {
             if (ModelState.IsValid)
@@ -166,6 +168,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeletePost(int id)
         {
             if (id <= 0)

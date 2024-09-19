@@ -33,6 +33,9 @@
                                 <li>
                                     <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Categories</a>
                                 </li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Book" asp-action="Index">Books</a>
+                                </li>
                                 <li><hr class="dropdown-divider"></li>
                             </ul>
                         </li>
@@ -44,15 +47,15 @@
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main class="pb-3 main text-primary">
+    <main class="main text-primary mt-4">
+        <div class="container">
             @* Include notification partial view *@
             <partial name="_NotificationsPartial" />
             @RenderBody()
-        </main>
-    </div>
+        </div>
+    </main>
 
-    <footer class="border-top footer bg-primary text-secondary text-center">
+    <footer class="footer border-top bg-primary text-secondary text-center">
         <div class="container">
             Made with <i class="bi bi-heart-fill"></i> by Abdalla Ahmed
         </div>
