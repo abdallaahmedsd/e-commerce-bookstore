@@ -41,6 +41,12 @@ namespace Bulky.DataAccess.Data.Configurations
                 .HasPrecision(18, 2)
                 .IsRequired();
 
+            builder.HasOne(x => x.Category)
+                .WithMany(x => x.Books)
+                .HasForeignKey(x => x.CatgoryId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.ToTable("Books");
 
             builder.HasData(SeedBooks());
@@ -57,7 +63,8 @@ namespace Bulky.DataAccess.Data.Configurations
                 ListPrice = 99,
                 Price = 90,
                 Price50 = 85,
-                Price100 = 80
+                Price100 = 80,
+                CatgoryId = 1,
             },
             new() {
                 Id = 2,
@@ -68,7 +75,8 @@ namespace Bulky.DataAccess.Data.Configurations
                 ListPrice = 40,
                 Price = 30,
                 Price50 = 25,
-                Price100 = 20
+                Price100 = 20,
+                CatgoryId = 1,
             },
             new() {
                 Id = 3,
@@ -79,7 +87,8 @@ namespace Bulky.DataAccess.Data.Configurations
                 ListPrice = 55,
                 Price = 50,
                 Price50 = 40,
-                Price100 = 35
+                Price100 = 35,
+                CatgoryId = 2,
             },
             new() {
                 Id = 4,
@@ -90,7 +99,8 @@ namespace Bulky.DataAccess.Data.Configurations
                 ListPrice = 70,
                 Price = 65,
                 Price50 = 60,
-                Price100 = 55
+                Price100 = 55,
+                CatgoryId = 3,
             },
             new() {
                 Id = 5,
@@ -101,7 +111,8 @@ namespace Bulky.DataAccess.Data.Configurations
                 ListPrice = 30,
                 Price = 27,
                 Price50 = 25,
-                Price100 = 20
+                Price100 = 20,
+                CatgoryId = 2,
             },
             new() {
                 Id = 6,
@@ -112,7 +123,8 @@ namespace Bulky.DataAccess.Data.Configurations
                 ListPrice = 25,
                 Price = 23,
                 Price50 = 22,
-                Price100 = 20
+                Price100 = 20,
+                CatgoryId = 2,
             }
         };
     }

@@ -19,5 +19,8 @@
         public double Price50 { get; set; }
 
         public double Price100 { get; set; }
+
+        public int CatgoryId { get; set; }
+        public TbCategory Category { get; set; } = null!;
     }
 }
