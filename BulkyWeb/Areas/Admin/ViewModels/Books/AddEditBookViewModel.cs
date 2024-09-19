@@ -39,5 +39,12 @@ namespace BulkyWeb.Areas.Admin.ViewModels.Books
         [Range(0, double.MaxValue, ErrorMessage = "Price for +100 units must be a positive number")]
         [DisplayName("Price for +100 units")]
         public double Price100 { get; set; }
+
+
+        [Required(ErrorMessage = "You must celect a category")]
+        [DisplayName("Category")]
+        public int CategoryId { get; set; }
+
+        public List<CategoryViewModel> Categories { get; set; } = [];
     }
 }

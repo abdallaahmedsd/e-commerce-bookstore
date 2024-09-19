@@ -41,7 +41,7 @@ namespace Bulky.DataAccess.Data.Configurations
                 .HasPrecision(18, 2)
                 .IsRequired();
 
-            builder.Property(x => x.CatgoryId)
+            builder.Property(x => x.CategoryId)
                 .IsRequired();
 
             builder.Property(x => x.ImageUrl)
@@ -50,7 +50,7 @@ namespace Bulky.DataAccess.Data.Configurations
 
             builder.HasOne(x => x.Category)
                 .WithMany(x => x.Books)
-                .HasForeignKey(x => x.CatgoryId)
+                .HasForeignKey(x => x.CategoryId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -71,7 +71,7 @@ namespace Bulky.DataAccess.Data.Configurations
                 Price = 90,
                 Price50 = 85,
                 Price100 = 80,
-                CatgoryId = 1,
+                CategoryId = 1,
                 ImageUrl = ""
             },
             new() {
@@ -84,7 +84,7 @@ namespace Bulky.DataAccess.Data.Configurations
                 Price = 30,
                 Price50 = 25,
                 Price100 = 20,
-                CatgoryId = 1,
+                CategoryId = 1,
                 ImageUrl = ""
             },
             new() {
@@ -97,7 +97,7 @@ namespace Bulky.DataAccess.Data.Configurations
                 Price = 50,
                 Price50 = 40,
                 Price100 = 35,
-                CatgoryId = 2,
+                CategoryId = 2,
                 ImageUrl = ""
             },
             new() {
@@ -110,7 +110,7 @@ namespace Bulky.DataAccess.Data.Configurations
                 Price = 65,
                 Price50 = 60,
                 Price100 = 55,
-                CatgoryId = 3,
+                CategoryId = 3,
                 ImageUrl = ""
             },
             new() {
@@ -123,7 +123,7 @@ namespace Bulky.DataAccess.Data.Configurations
                 Price = 27,
                 Price50 = 25,
                 Price100 = 20,
-                CatgoryId = 2,
+                CategoryId = 2,
                 ImageUrl = ""
             },
             new() {
@@ -136,7 +136,7 @@ namespace Bulky.DataAccess.Data.Configurations
                 Price = 23,
                 Price50 = 22,
                 Price100 = 20,
-                CatgoryId = 2,
+                CategoryId = 2,
                 ImageUrl = ""
             }
         };

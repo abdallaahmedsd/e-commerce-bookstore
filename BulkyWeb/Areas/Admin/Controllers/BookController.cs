@@ -18,23 +18,53 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var lstBooksModels = await _unitOfWork.Book.GetAllAsync();
-
-            var lstBooksViewModels = new List<BookListViewModel>();
-
-            foreach (var bookModel in lstBooksModels)
+            try
             {
-                BookListViewModel bookListViewModel = new();
-                Mapper(bookModel, bookListViewModel);
-                lstBooksViewModels.Add(bookListViewModel);
-            }
+                var lstBooksModels = await _unitOfWork.Book.GetAllAsync();
 
-            return View(lstBooksViewModels);
+                var lstBooksViewModels = new List<BookListViewModel>();
+
+                foreach (var bookModel in lstBooksModels)
+                {
+                    BookListViewModel bookListViewModel = new();
+                    Mapper(bookModel, bookListViewModel);
+                    lstBooksViewModels.Add(bookListViewModel);
+                }
+
+                return View(lstBooksViewModels);
+            }
+            catch (Exception ex)
+            {
+                // Log exception (ex) here
+                TempData["error"] = "An error occurred while retrieving the books.";
+                return View("Error");
+            }
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            try
+            {
+                List<CategoryViewModel> categories = (await _unitOfWork.Category.GetAllOrderedByDisplayOrderAsync())
+                    .Select(x => new CategoryViewModel 
+                    {
+                        Id = x.Id,
+                        Name = x.Name 
+                    }).ToList();
+
+                var bookViewModel = new AddEditBookViewModel
+                {
+                    Categories = categories
+                };
+
+                return View(bookViewModel);
+            }
+            catch (Exception ex)
+            {
+                // Log exception (ex) here
+                TempData["error"] = "An error occurred while retrieving the categories.";
+                return View("Error");
+            }
         }
 
         [HttpPost]
@@ -238,7 +268,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
             bookListViewModel.Title = bookModel.Title;
             bookListViewModel.ISBN = bookModel.ISBN;
             bookListViewModel.Author = bookModel.Author;
-            bookListViewModel.Price = bookModel.Price;
+            bookListViewModel.ListPrice = bookModel.ListPrice;
         }
 
         private static void Mapper(AddEditBookViewModel bookViewModel, TbBook bookModel)
@@ -251,6 +281,8 @@ namespace BulkyWeb.Areas.Admin.Controllers
             bookModel.Price = bookViewModel.Price;
             bookModel.Price50 = bookViewModel.Price50;
             bookModel.Price100 = bookViewModel.Price100;
+            bookModel.CategoryId = bookViewModel.CategoryId;
+            bookModel.ImageUrl = "";
         }
 
         private static void Mapper(TbBook bookModel, BookDetailsViewModel bookDetailsViewModel)

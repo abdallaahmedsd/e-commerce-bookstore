@@ -34,7 +34,7 @@ namespace Bulky.DataAccess.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("CatgoryId")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -75,7 +75,7 @@ namespace Bulky.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CatgoryId");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Books", (string)null);
 
@@ -84,7 +84,7 @@ namespace Bulky.DataAccess.Migrations
                         {
                             Id = 1,
                             Author = "Billy Spark",
-                            CatgoryId = 1,
+                            CategoryId = 1,
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt.",
                             ISBN = "SWD-9999-001A",
                             ImageUrl = "",
@@ -98,7 +98,7 @@ namespace Bulky.DataAccess.Migrations
                         {
                             Id = 2,
                             Author = "Nancy Hoover",
-                            CatgoryId = 1,
+                            CategoryId = 1,
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt.",
                             ISBN = "CAW-7777-01B",
                             ImageUrl = "",
@@ -112,7 +112,7 @@ namespace Bulky.DataAccess.Migrations
                         {
                             Id = 3,
                             Author = "Julian Button",
-                            CatgoryId = 2,
+                            CategoryId = 2,
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt.",
                             ISBN = "RIT-0555-01C",
                             ImageUrl = "",
@@ -126,7 +126,7 @@ namespace Bulky.DataAccess.Migrations
                         {
                             Id = 4,
                             Author = "Abby Muscles",
-                            CatgoryId = 3,
+                            CategoryId = 3,
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt.",
                             ISBN = "WS3-3333-3301D",
                             ImageUrl = "",
@@ -140,7 +140,7 @@ namespace Bulky.DataAccess.Migrations
                         {
                             Id = 5,
                             Author = "Ron Parker",
-                            CatgoryId = 2,
+                            CategoryId = 2,
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt.",
                             ISBN = "SOT-1111-1101E",
                             ImageUrl = "",
@@ -154,7 +154,7 @@ namespace Bulky.DataAccess.Migrations
                         {
                             Id = 6,
                             Author = "Laura Phantom",
-                            CatgoryId = 2,
+                            CategoryId = 2,
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt.",
                             ISBN = "FOT-0000-0001F",
                             ImageUrl = "",
@@ -211,7 +211,7 @@ namespace Bulky.DataAccess.Migrations
                 {
                     b.HasOne("Bulky.Models.TbCategory", "Category")
                         .WithMany("Books")
-                        .HasForeignKey("CatgoryId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

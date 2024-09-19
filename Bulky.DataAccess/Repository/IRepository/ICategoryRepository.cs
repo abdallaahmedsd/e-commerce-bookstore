@@ -4,7 +4,7 @@ namespace Bulky.DataAccess.Repository.IRepository
 {
     public interface ICategoryRepository : IGenericRepository<TbCategory>
     {
-        Task<IEnumerable<TbCategory>> GetAllOrderedByDisplayOrder();
+        Task<IEnumerable<TbCategory>> GetAllOrderedByDisplayOrderAsync();
         void Update(TbCategory entity);
     }
 }

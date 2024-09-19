@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bulky.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240919151827_ConfigueOneToManyRelationBetweenCategoryAndBook")]
-    partial class ConfigueOneToManyRelationBetweenCategoryAndBook
+    [Migration("20240919211653_CorrectCategoryIdColumnName")]
+    partial class CorrectCategoryIdColumnName
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,6 +50,11 @@ namespace Bulky.DataAccess.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<double>("ListPrice")
                         .HasPrecision(18, 2)
                         .HasColumnType("float(18)");
@@ -82,9 +87,10 @@ namespace Bulky.DataAccess.Migrations
                         {
                             Id = 1,
                             Author = "Billy Spark",
-                            CatgoryId = 1,
+                            CategoryId = 1,
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt.",
                             ISBN = "SWD-9999-001A",
+                            ImageUrl = "",
                             ListPrice = 99.0,
                             Price = 90.0,
                             Price100 = 80.0,
@@ -95,9 +101,10 @@ namespace Bulky.DataAccess.Migrations
                         {
                             Id = 2,
                             Author = "Nancy Hoover",
-                            CatgoryId = 1,
+                            CategoryId = 1,
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt.",
                             ISBN = "CAW-7777-01B",
+                            ImageUrl = "",
                             ListPrice = 40.0,
                             Price = 30.0,
                             Price100 = 20.0,
@@ -108,9 +115,10 @@ namespace Bulky.DataAccess.Migrations
                         {
                             Id = 3,
                             Author = "Julian Button",
-                            CatgoryId = 2,
+                            CategoryId = 2,
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt.",
                             ISBN = "RIT-0555-01C",
+                            ImageUrl = "",
                             ListPrice = 55.0,
                             Price = 50.0,
                             Price100 = 35.0,
@@ -121,9 +129,10 @@ namespace Bulky.DataAccess.Migrations
                         {
                             Id = 4,
                             Author = "Abby Muscles",
-                            CatgoryId = 3,
+                            CategoryId = 3,
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt.",
                             ISBN = "WS3-3333-3301D",
+                            ImageUrl = "",
                             ListPrice = 70.0,
                             Price = 65.0,
                             Price100 = 55.0,
@@ -134,9 +143,10 @@ namespace Bulky.DataAccess.Migrations
                         {
                             Id = 5,
                             Author = "Ron Parker",
-                            CatgoryId = 2,
+                            CategoryId = 2,
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt.",
                             ISBN = "SOT-1111-1101E",
+                            ImageUrl = "",
                             ListPrice = 30.0,
                             Price = 27.0,
                             Price100 = 20.0,
@@ -147,9 +157,10 @@ namespace Bulky.DataAccess.Migrations
                         {
                             Id = 6,
                             Author = "Laura Phantom",
-                            CatgoryId = 2,
+                            CategoryId = 2,
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt.",
                             ISBN = "FOT-0000-0001F",
+                            ImageUrl = "",
                             ListPrice = 25.0,
                             Price = 23.0,
                             Price100 = 20.0,

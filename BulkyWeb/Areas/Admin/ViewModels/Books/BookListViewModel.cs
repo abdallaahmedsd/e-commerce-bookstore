@@ -10,6 +10,8 @@
 
         public string ISBN { get; set; } = null!;
 
-        public double Price { get; set; }
+        public double ListPrice { get; set; }
+
+        public string? Category { get; set; }
     }
 }

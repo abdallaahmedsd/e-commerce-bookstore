@@ -37,7 +37,7 @@ namespace Bulky.DataAccess.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("CatgoryId")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -78,7 +78,7 @@ namespace Bulky.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CatgoryId");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Books", (string)null);
 
@@ -214,7 +214,7 @@ namespace Bulky.DataAccess.Migrations
                 {
                     b.HasOne("Bulky.Models.TbCategory", "Category")
                         .WithMany("Books")
-                        .HasForeignKey("CatgoryId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

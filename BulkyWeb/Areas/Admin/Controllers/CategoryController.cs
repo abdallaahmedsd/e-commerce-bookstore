@@ -19,7 +19,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
         {
             try
             {
-                var lstCategoriesModels = await _unitOfWork.Category.GetAllOrderedByDisplayOrder();
+                var lstCategoriesModels = await _unitOfWork.Category.GetAllOrderedByDisplayOrderAsync();
 
                 var lstCategoriesViewModels = new List<CategoryViewModel>();
 

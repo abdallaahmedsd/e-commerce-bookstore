@@ -20,7 +20,7 @@
 
         public double Price100 { get; set; }
 
-        public int CatgoryId { get; set; }
+        public int CategoryId { get; set; }
         public TbCategory Category { get; set; } = null!;
 
         public string ImageUrl { get; set; } = null!;

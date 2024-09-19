@@ -14,7 +14,7 @@ namespace Bulky.DataAccess.Repository
             _context = context;
         }
 
-        public async Task<IEnumerable<TbCategory>> GetAllOrderedByDisplayOrder()
+        public async Task<IEnumerable<TbCategory>> GetAllOrderedByDisplayOrderAsync()
         {
             return await _context.Categories.OrderBy(c => c.DisplayOrder).ThenBy(c => c.Name).ToListAsync();
         }
