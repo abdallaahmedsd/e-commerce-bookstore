@@ -18,14 +18,14 @@ namespace BulkyWeb.Areas.Admin.ViewModels.Books
         public string Author { get; set; } = null!;
 
         [DisplayName("List Price")]
-        public double ListPrice { get; set; }
+        public decimal ListPrice { get; set; }
 
-        public double Price { get; set; }
+        public decimal Price { get; set; }
 
         [DisplayName("Price for +50 units")]
-        public double Price50 { get; set; }
+        public decimal Price50 { get; set; }
 
         [DisplayName("Price for +100 units")]
-        public double Price100 { get; set; }
+        public decimal Price100 { get; set; }
     }
 }

@@ -27,18 +27,18 @@ namespace BulkyWeb.Areas.Admin.ViewModels.Books
 
         [Range(0, double.MaxValue, ErrorMessage = "List Price must be a positive number")]
         [DisplayName("List Price")]
-        public double ListPrice { get; set; }
+        public decimal ListPrice { get; set; }
 
         [Range(0, double.MaxValue, ErrorMessage = "Price must be a positive number")]
-        public double Price { get; set; }
+        public decimal Price { get; set; }
 
         [Range(0, double.MaxValue, ErrorMessage = "Price for +50 units must be a positive number")]
         [DisplayName("Price for +50 units")]
-        public double Price50 { get; set; }
+        public decimal Price50 { get; set; }
 
         [Range(0, double.MaxValue, ErrorMessage = "Price for +100 units must be a positive number")]
         [DisplayName("Price for +100 units")]
-        public double Price100 { get; set; }
+        public decimal Price100 { get; set; }
 
 
         [Required(ErrorMessage = "You must celect a category")]

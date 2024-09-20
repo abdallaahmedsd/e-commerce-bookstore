@@ -1,6 +1,6 @@
-﻿namespace BulkyWeb.Areas.Admin.ViewModels.Books
+﻿namespace Bulky.Models.ViewModels
 {
-/*    public class BookListViewModel
+    public class BookListViewModel
     {
         public int Id { get; set; }
 
@@ -10,8 +10,8 @@
 
         public string ISBN { get; set; } = null!;
 
-        public decimal ListPrice { get; set; }
+        public decimal Price { get; set; }
 
-        public string? Category { get; set; }
-    }*/
+        public string Category { get; set; } = null!;
+    }
 }

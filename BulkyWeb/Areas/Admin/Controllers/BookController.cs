@@ -1,5 +1,6 @@
 ﻿using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models;
+using Bulky.Models.ViewModels;
 using BulkyWeb.Areas.Admin.ViewModels;
 using BulkyWeb.Areas.Admin.ViewModels.Books;
 using Microsoft.AspNetCore.Mvc;
@@ -10,28 +11,21 @@ namespace BulkyWeb.Areas.Admin.Controllers
     public class BookController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IReadOnlyRepository<BookListViewModel> _readOnlyRepository;
 
-        public BookController(IUnitOfWork unitOfWork)
+        public BookController(IUnitOfWork unitOfWork, IReadOnlyRepository<BookListViewModel> readOnlyRepository)
         {
             _unitOfWork = unitOfWork;
+            _readOnlyRepository = readOnlyRepository;
         }
 
         public async Task<IActionResult> Index()
         {
             try
             {
-                var lstBooksModels = await _unitOfWork.Book.GetAllAsync();
+                var lstBooks = await _readOnlyRepository.GetAllAsync();
 
-                var lstBooksViewModels = new List<BookListViewModel>();
-
-                foreach (var bookModel in lstBooksModels)
-                {
-                    BookListViewModel bookListViewModel = new();
-                    Mapper(bookModel, bookListViewModel);
-                    lstBooksViewModels.Add(bookListViewModel);
-                }
-
-                return View(lstBooksViewModels);
+                return View(lstBooks);
             }
             catch (Exception ex)
             {
@@ -262,14 +256,14 @@ namespace BulkyWeb.Areas.Admin.Controllers
             bookViewModel.Price100 = bookModel.Price100;
         }
 
-        private static void Mapper(TbBook bookModel, BookListViewModel bookListViewModel)
+/*        private static void Mapper(TbBook bookModel, BookListViewModel bookListViewModel)
         {
             bookListViewModel.Id = bookModel.Id;
             bookListViewModel.Title = bookModel.Title;
             bookListViewModel.ISBN = bookModel.ISBN;
             bookListViewModel.Author = bookModel.Author;
             bookListViewModel.ListPrice = bookModel.ListPrice;
-        }
+        }*/
 
         private static void Mapper(AddEditBookViewModel bookViewModel, TbBook bookModel)
         {
