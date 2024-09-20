@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 
-namespace BulkyWeb.Areas.Admin.ViewModels.Books
+namespace Bulky.Models.ViewModels.Admin.Books
 {
     public class AddEditBookViewModel
     {

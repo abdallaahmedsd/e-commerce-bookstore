@@ -1,4 +1,4 @@
-﻿namespace Bulky.Models.ViewModels
+﻿namespace Bulky.Models.ViewModels.Admin.Books
 {
     public class BookListViewModel
     {

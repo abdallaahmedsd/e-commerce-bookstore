@@ -1,8 +1,7 @@
 ﻿using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models;
-using Bulky.Models.ViewModels;
-using BulkyWeb.Areas.Admin.ViewModels;
-using BulkyWeb.Areas.Admin.ViewModels.Books;
+using Bulky.Models.ViewModels.Admin;
+using Bulky.Models.ViewModels.Admin.Books;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BulkyWeb.Areas.Admin.Controllers
@@ -236,13 +235,6 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
 
 
-
-
-
-
-
-
-
         private static void Mapper(TbBook bookModel, AddEditBookViewModel bookViewModel)
         {
             bookViewModel.Id = bookModel.Id;
@@ -255,15 +247,6 @@ namespace BulkyWeb.Areas.Admin.Controllers
             bookViewModel.Price50 = bookModel.Price50;
             bookViewModel.Price100 = bookModel.Price100;
         }
-
-/*        private static void Mapper(TbBook bookModel, BookListViewModel bookListViewModel)
-        {
-            bookListViewModel.Id = bookModel.Id;
-            bookListViewModel.Title = bookModel.Title;
-            bookListViewModel.ISBN = bookModel.ISBN;
-            bookListViewModel.Author = bookModel.Author;
-            bookListViewModel.ListPrice = bookModel.ListPrice;
-        }*/
 
         private static void Mapper(AddEditBookViewModel bookViewModel, TbBook bookModel)
         {

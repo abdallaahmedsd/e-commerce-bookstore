@@ -1,5 +1,5 @@
 ﻿using Bulky.Models;
-using Bulky.Models.ViewModels;
+using Bulky.Models.ViewModels.Admin.Books;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bulky.DataAccess.Data

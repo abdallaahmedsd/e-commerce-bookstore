@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 
-namespace BulkyWeb.Areas.Admin.ViewModels
+namespace Bulky.Models.ViewModels.Admin
 {
     public class CategoryViewModel
     {

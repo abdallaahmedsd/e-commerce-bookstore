@@ -1,4 +1,4 @@
-﻿using Bulky.Models.ViewModels;
+﻿using Bulky.Models.ViewModels.Admin.Books;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

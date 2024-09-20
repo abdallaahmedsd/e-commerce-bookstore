@@ -1,7 +1,5 @@
 ﻿using Bulky.DataAccess.Repository.IRepository;
-using BulkyWeb.Areas.Admin.ViewModels;
 using BulkyWeb.DTOs;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BulkyWeb.ApiController
