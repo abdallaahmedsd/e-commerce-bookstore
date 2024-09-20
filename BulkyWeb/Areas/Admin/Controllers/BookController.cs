@@ -11,11 +11,13 @@ namespace BulkyWeb.Areas.Admin.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IReadOnlyRepository<BookListViewModel> _readOnlyRepository;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public BookController(IUnitOfWork unitOfWork, IReadOnlyRepository<BookListViewModel> readOnlyRepository)
+        public BookController(IUnitOfWork unitOfWork, IReadOnlyRepository<BookListViewModel> readOnlyRepository, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
             _readOnlyRepository = readOnlyRepository;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<IActionResult> Index()
@@ -62,15 +64,27 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AddEditBookViewModel bookViewModel)
+        public async Task<IActionResult> Create(AddEditBookViewModel bookViewModel, IFormFile file)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    TbBook bookModel = new();
+                    string wwwRootPath = _webHostEnvironment.WebRootPath;
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string bookPath = Path.Combine(wwwRootPath, @"uploads\images\books\");
 
+                    using(var fileStream = new FileStream(Path.Combine(bookPath, fileName), FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+
+                    string imageUrl = @"uploads\images\books" + fileName;
+
+                    TbBook bookModel = new();
+                    bookModel.ImageUrl = imageUrl;
                     Mapper(bookViewModel, bookModel);
+
 
                     await _unitOfWork.Book.AddAsync(bookModel);
 
@@ -85,6 +99,15 @@ namespace BulkyWeb.Areas.Admin.Controllers
                     return View("Error");
                 }
             }
+
+            List<CategoryViewModel> categories = (await _unitOfWork.Category.GetAllOrderedByDisplayOrderAsync())
+                .Select(x => new CategoryViewModel
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                }).ToList();
+
+            bookViewModel.Categories = categories;
 
             return View(bookViewModel);
         }
@@ -104,6 +127,15 @@ namespace BulkyWeb.Areas.Admin.Controllers
                 AddEditBookViewModel bookViewModel = new();
                 Mapper(bookModel, bookViewModel);
 
+                List<CategoryViewModel> categories = (await _unitOfWork.Category.GetAllOrderedByDisplayOrderAsync())
+                    .Select(x => new CategoryViewModel
+                    {
+                        Id = x.Id,
+                        Name = x.Name
+                    }).ToList();
+
+                bookViewModel.Categories = categories;
+
                 return View(bookViewModel);
             }
             catch (Exception ex)
@@ -116,7 +148,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AddEditBookViewModel bookViewModel)
+        public async Task<IActionResult> Edit(int id, AddEditBookViewModel bookViewModel, IFormFile file)
         {
             if (ModelState.IsValid)
             {
@@ -141,6 +173,15 @@ namespace BulkyWeb.Areas.Admin.Controllers
                     return View("Error");
                 }
             }
+
+            List<CategoryViewModel> categories = (await _unitOfWork.Category.GetAllOrderedByDisplayOrderAsync())
+                .Select(x => new CategoryViewModel
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                }).ToList();
+
+            bookViewModel.Categories = categories;
 
             return View(bookViewModel);
         }
@@ -246,6 +287,8 @@ namespace BulkyWeb.Areas.Admin.Controllers
             bookViewModel.Price = bookModel.Price;
             bookViewModel.Price50 = bookModel.Price50;
             bookViewModel.Price100 = bookModel.Price100;
+            bookViewModel.ImageUrl = bookModel.ImageUrl;
+            bookViewModel.CategoryId = bookModel.CategoryId;
         }
 
         private static void Mapper(AddEditBookViewModel bookViewModel, TbBook bookModel)
@@ -259,7 +302,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
             bookModel.Price50 = bookViewModel.Price50;
             bookModel.Price100 = bookViewModel.Price100;
             bookModel.CategoryId = bookViewModel.CategoryId;
-            bookModel.ImageUrl = "";
+            // bookModel.ImageUrl = "";
         }
 
         private static void Mapper(TbBook bookModel, BookDetailsViewModel bookDetailsViewModel)

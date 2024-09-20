@@ -1,0 +1,89 @@
+﻿@model AddEditBookViewModel
+
+@{
+    SelectList categories = new SelectList(Model.Categories, "Id", "Name");
+}
+
+<div class="row mt-4">
+    <div class="col-9">
+        <div class="border p-3">
+            <input type="hidden" asp-for="Id" />
+            @*<div asp-validation-summary="ModelOnly"></div>*@
+            <div class="form-floating py-2 col-12">
+                <input asp-for="Title" class="form-control border-0 shadow" />
+                <label asp-for="Title" class="ms-2"></label>
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="py-2 col-12">
+                <label asp-for="Description" class="ms-2 text-muted"></label>
+                <textarea asp-for="Description" class="border-0 shadow"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-floating py-2 col-12">
+                <input asp-for="Author" class="form-control border-0 shadow" />
+                <label asp-for="Author" class="ms-2"></label>
+                <span asp-validation-for="Author" class="text-danger"></span>
+            </div>
+            <div class="form-floating py-2 col-12">
+                <input asp-for="ISBN" class="form-control border-0 shadow" />
+                <label asp-for="ISBN" class="ms-2"></label>
+                <span asp-validation-for="ISBN" class="text-danger"></span>
+            </div>
+            <div class="form-floating py-2 col-12">
+                <input asp-for="Price" class="form-control border-0 shadow" />
+                <label asp-for="Price" class="ms-2"></label>
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-floating py-2 col-12">
+                <input asp-for="ListPrice" class="form-control border-0 shadow" />
+                <label asp-for="ListPrice" class="ms-2"></label>
+                <span asp-validation-for="ListPrice" class="text-danger"></span>
+            </div>
+            <div class="form-floating py-2 col-12">
+                <input asp-for="Price50" class="form-control border-0 shadow" />
+                <label asp-for="Price50" class="ms-2"></label>
+                <span asp-validation-for="Price50" class="text-danger"></span>
+            </div>
+            <div class="form-floating py-2 col-12">
+                <input asp-for="Price100" class="form-control border-0 shadow" />
+                <label asp-for="Price100" class="ms-2"></label>
+                <span asp-validation-for="Price100" class="text-danger"></span>
+            </div>
+            <div class="form-floating py-2 col-12">
+                <select asp-for="CategoryId" asp-items="categories" class="form-select border-0 shadow">
+                    <option selected disabled value="0">Select Category</option>
+                </select>
+                <label asp-for="CategoryId" class="ms-2"></label>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-floating py-2 col-12">
+
+                @*<input type="file" name="file" class="form-control border-0 shadow" />*@
+
+                <input class="form-control border-0 shadow input-validation-error"
+                       type="file"
+                       data-val="true"
+                       data-val-required="You have to upload at least one image"
+                       name="file"
+                       aria-describedby="file-error"
+                       aria-invalid="true" />
+                <label asp-for="ImageUrl" class="ms-2"></label>
+                <span class="text-danger field-validation-error" data-valmsg-for="file" data-valmsg-replace="true"></span>
+            </div>
+            <hr />
+            <div class="row mt-3">
+                <div class="col-6 col-md-3">
+                    <button type="submit" class="btn btn-primary form-control">@(Model.Id == 0 ?  "Create" : "Update")</button>
+                </div>
+                <div class="col-6 col-md-3">
+                    <a asp-area="Admin" asp-controller="Book" asp-action="Index" class="btn btn-outline-primary border  form-control">
+                        Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-3 ">
+        <img src="/@Model.ImageUrl" alt="Book Image" class="w-100" style="border-radius:5px; border:1px solid #bbb9b9" />
+    </div>
+</div>
