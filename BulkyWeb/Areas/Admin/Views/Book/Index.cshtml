@@ -1,5 +1,10 @@
 ﻿@model IEnumerable<BookListViewModel>
 
+@section Styles
+{
+    <link href="//cdn.datatables.net/2.1.7/css/dataTables.dataTables.min.css" rel="stylesheet" />
+}
+
 <div class="card shadow border-0">
     <div class="card-header bg-secondary bg-gradient ml-0 py-2">
         <div class="row">
@@ -20,10 +25,10 @@
 
         <!-- Responsive table wrapper -->
         <div class="table-responsive-sm">
-            <table class="table table-bordered table-striped">
+            <table id="tblTable" class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>Book Title</th>
+                        <th>Title</th>
                         <th>Author</th>
                         <th>ISBN</th>
                         <th>Price</th>
@@ -31,32 +36,13 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach (var product in Model)
-                    {
-                        <tr>
-                            <td>@product.Title</td>
-                            <td>@product.Author</td>
-                            <td>@product.ISBN</td>
-                            <td>@product.Price</td>
-                            <td>@product.Category</td>
-                            <td>
-                                <div class="btn-group" role="group">
-                                    <a asp-controller="Book" asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary mx-2">
-                                        <i class="bi bi-info-lg"></i>
-                                    </a>
-                                    <a asp-controller="Book" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-warning mx-2">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                    <a asp-controller="Book" asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger mx-2">
-                                        <i class="bi bi-trash-fill"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
             </table>
         </div>
     </div>
 </div>
+
+@section Scripts 
+{
+    <script src="//cdn.datatables.net/2.1.7/js/dataTables.min.js"></script>
+    <script src="~/js/books.js"></script>
+}
