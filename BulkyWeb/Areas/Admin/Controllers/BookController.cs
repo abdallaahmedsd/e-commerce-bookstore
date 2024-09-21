@@ -79,7 +79,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
                         await file.CopyToAsync(fileStream);
                     }
 
-                    string imageUrl = @"uploads\images\books" + fileName;
+                    string imageUrl = @"uploads\images\books\" + fileName;
 
                     TbBook bookModel = new();
                     bookModel.ImageUrl = imageUrl;
@@ -148,20 +148,44 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, AddEditBookViewModel bookViewModel, IFormFile file)
+        public async Task<IActionResult> Edit(int id, AddEditBookViewModel bookViewModel, IFormFile? file)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var produxtModel = await _unitOfWork.Book.GetByIdAsync(id);
+                    var bookModel = await _unitOfWork.Book.GetByIdAsync(id);
 
-                    if (produxtModel == null)
+                    if (bookModel == null)
                         return NotFound();
 
-                    Mapper(bookViewModel, produxtModel);
+                    if (file != null)
+                    {
+                        // delete old image if the user selected a new image
+                        string wwwRootPath = _webHostEnvironment.WebRootPath;
+                        string oldImagePath = Path.Combine(wwwRootPath, bookModel.ImageUrl);
+                        if(System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
 
-                    _unitOfWork.Book.Update(produxtModel);
+                        // save the new image
+                        string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                        string bookPath = Path.Combine(wwwRootPath, @"uploads\images\books\");
+
+                        using (var fileStream = new FileStream(Path.Combine(bookPath, fileName), FileMode.Create))
+                        {
+                            await file.CopyToAsync(fileStream);
+                        }
+
+                        // update imageUrl
+                        string imageUrl = @"uploads\images\books\" + fileName;
+                        bookModel.ImageUrl = imageUrl;
+                    }
+
+                    Mapper(bookViewModel, bookModel);
+
+                    _unitOfWork.Book.Update(bookModel);
                     await _unitOfWork.SaveAsync();
                     TempData["success"] = "Book updated successfully!";
                     return RedirectToAction("Index");
@@ -225,6 +249,14 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
                 if (book == null)
                     return NotFound();
+
+                // delete old image if the user selected a new image
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+                string oldImagePath = Path.Combine(wwwRootPath, book.ImageUrl);
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
 
                 _unitOfWork.Book.Remove(book);
                 await _unitOfWork.SaveAsync();
