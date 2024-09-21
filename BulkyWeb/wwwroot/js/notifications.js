@@ -21,3 +21,16 @@ $(function () {
         toastr.info(infoMessage);
     }
 });
+
+// Check if the 'bookDeleted' flag exists in sessionStorage
+document.addEventListener('DOMContentLoaded', function () {
+    const message = sessionStorage.getItem('bookDeleted');
+
+    if (message) {
+        // Show the notification
+        toastr.success(message);
+
+        // Remove the flag from sessionStorage
+        sessionStorage.removeItem('bookDeleted');
+    }
+});
