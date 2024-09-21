@@ -21,24 +21,32 @@ namespace Bulky.DataAccess.Repository
             await _dbSet.AddAsync(entity);
         }
 
-        public async Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> predicate)
+        public async Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> predicate, string? includeProperties = null)
         {
-            return await _dbSet.Where(predicate).ToListAsync();
+            IQueryable<T> query = _dbSet;
+            query = _IncludeNavigationProperties(query, includeProperties);
+            return await query.Where(predicate).ToListAsync();
         }
 
-        public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate)
+        public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate, string? includeProperties = null)
         {
-            return await _dbSet.Where(predicate).FirstOrDefaultAsync();
+            IQueryable<T> query = _dbSet;
+            query = _IncludeNavigationProperties(query, includeProperties);
+            return await query.FirstOrDefaultAsync(predicate);
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync()
+        public async Task<IEnumerable<T>> GetAllAsync(string? includeProperties = null)
         {
-            return await _dbSet.ToListAsync();
+            IQueryable<T> query = _dbSet;
+            query = _IncludeNavigationProperties(query, includeProperties);
+            return await query.ToListAsync();
         }
 
-        public async Task<T?> GetByIdAsync(int id)
+        public async Task<T?> GetByIdAsync(int id, string? includeProperties = null)
         {
-            return await _dbSet.FindAsync(id);
+            IQueryable<T> query = _dbSet;
+            query = _IncludeNavigationProperties(query, includeProperties);
+            return await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
         }
 
         public void Remove(T entity)
@@ -49,6 +57,19 @@ namespace Bulky.DataAccess.Repository
         public void RemoveRange(IEnumerable<T> entities)
         {
             _dbSet.RemoveRange(entities);
+        }
+
+        private IQueryable<T> _IncludeNavigationProperties(IQueryable<T> query, string? includeProperties = null)
+        {
+            if (!string.IsNullOrWhiteSpace(includeProperties))
+            {
+                var properties = includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var property in properties)
+                {
+                    query = query.Include(property);
+                }
+            }
+            return query;
         }
     }
 }
