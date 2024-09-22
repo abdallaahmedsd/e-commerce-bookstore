@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BulkyWeb.Areas.Admin.ApiControllers
 {
-	[Route("api/admin/[controller]")]
+    [Route("api/admin/[controller]")]
 	[ApiController]
 	public class BooksController : ControllerBase
 	{
