@@ -22,15 +22,15 @@ $(function () {
     }
 });
 
-// Check if the 'bookDeleted' flag exists in sessionStorage
+// Check if the 'toastr-success-message' flag exists in sessionStorage
 document.addEventListener('DOMContentLoaded', function () {
-    const message = sessionStorage.getItem('bookDeleted');
+    const message = sessionStorage.getItem('toastr-success-message');
 
     if (message) {
         // Show the notification
         toastr.success(message);
 
         // Remove the flag from sessionStorage
-        sessionStorage.removeItem('bookDeleted');
+        sessionStorage.removeItem('toastr-success-message');
     }
 });

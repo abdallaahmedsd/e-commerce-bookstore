@@ -1,11 +1,11 @@
 ﻿import '../lib/toastr.js/toastr.min.js';
 
-document.getElementById('js-delete-book').addEventListener('click', (e) => {
-    const { bookId } = e.target.dataset;
-    deleteBook(`/api/admin/books/${bookId}`);
+document.getElementById('js-delete-category').addEventListener('click', (e) => {
+    const { categoryId } = e.target.dataset;
+    deleteCategory(`/api/admin/categories/${categoryId}`);
 });
 
-function deleteBook(url) {
+function deleteCategory(url) {
     Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
@@ -23,8 +23,8 @@ function deleteBook(url) {
                     // Store the notification message in sessionStorage
                     sessionStorage.setItem('toastr-success-message', data.message);
 
-                    // Redirect to the book list page
-                    window.location.href = '/admin/book/index';
+                    // Redirect to the categories list page
+                    window.location.href = '/admin/category/index';
                 }
             });
         }

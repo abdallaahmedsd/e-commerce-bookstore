@@ -59,7 +59,6 @@ namespace BulkyWeb.Areas.Admin.ApiControllers
 
                 _unitOfWork.Book.Remove(book);
                 await _unitOfWork.SaveAsync();
-                // TempData["success"] = "Book deleted successfully!";
                 return Ok(new { success = true, message = "Book deleted successfully!" });
             }
             catch (Exception ex)
