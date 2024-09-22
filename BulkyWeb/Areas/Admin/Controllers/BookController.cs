@@ -237,41 +237,6 @@ namespace BulkyWeb.Areas.Admin.Controllers
 			}
 		}
 
-		[HttpPost, ActionName("Delete")]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> DeletePost(int id)
-		{
-			if (id <= 0)
-				return NotFound();
-
-			try
-			{
-				var book = await _unitOfWork.Book.GetByIdAsync(id);
-
-				if (book == null)
-					return NotFound();
-
-				// delete old image if the user selected a new image
-				string wwwRootPath = _webHostEnvironment.WebRootPath;
-				string oldImagePath = Path.Combine(wwwRootPath, book.ImageUrl);
-				if (System.IO.File.Exists(oldImagePath))
-				{
-					System.IO.File.Delete(oldImagePath);
-				}
-
-				_unitOfWork.Book.Remove(book);
-				await _unitOfWork.SaveAsync();
-				TempData["success"] = "Book deleted successfully!";
-				return RedirectToAction("Index");
-			}
-			catch (Exception ex)
-			{
-				// Log exception (ex) here
-				TempData["error"] = "An error occurred while deleting the book.";
-				return View("Error");
-			}
-		}
-
 		public async Task<IActionResult> Details(int id)
 		{
 			if (id <= 0)
