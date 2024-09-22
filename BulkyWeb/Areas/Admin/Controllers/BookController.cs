@@ -244,7 +244,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
 			try
 			{
-				var bookModel = await _unitOfWork.Book.GetByIdAsync(id);
+				var bookModel = await _unitOfWork.Book.GetByIdAsync(id, "Category");
 
 				if (bookModel == null)
 					return NotFound();
@@ -314,6 +314,8 @@ namespace BulkyWeb.Areas.Admin.Controllers
 			bookDetailsViewModel.Price = bookModel.Price;
 			bookDetailsViewModel.Price50 = bookModel.Price50;
 			bookDetailsViewModel.Price100 = bookModel.Price100;
+			bookDetailsViewModel.ImageUrl = bookModel.ImageUrl;
+			bookDetailsViewModel.Category = bookModel.Category.Name;
 		}
 	}
 }

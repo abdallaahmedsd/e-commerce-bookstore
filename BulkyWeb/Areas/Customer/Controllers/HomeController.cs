@@ -1,5 +1,7 @@
 using Bulky.DataAccess.Repository.IRepository;
+using Bulky.Models;
 using Bulky.Models.ViewModels;
+using Bulky.Models.ViewModels.Admin.Books;
 using Bulky.Models.ViewModels.Customer;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -43,10 +45,55 @@ namespace BulkyWeb.Areas.Customer.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+		public async Task<IActionResult> Details(int bookId)
+		{
+			if (bookId <= 0)
+				return NotFound();
+
+			try
+			{
+				var bookModel = await _unitOfWork.Book.GetByIdAsync(bookId, "Category");
+
+				if (bookModel == null)
+					return NotFound();
+
+				BookDetailsViewModel bookDetailsViewModel = new();
+
+				Mapper(bookModel, bookDetailsViewModel);
+
+				return View(bookDetailsViewModel);
+			}
+			catch (Exception ex)
+			{
+				// Log exception (ex) here
+				TempData["error"] = "An error occurred while retrieving book details.";
+
+				/* ErrorViewModel model = new ErrorViewModel() { RequestId = Guid.NewGuid().ToString() };
+                 return View("Error", model);*/
+
+				return View("Error");
+			}
+		}
+
+		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-    }
+
+		private static void Mapper(TbBook bookModel, BookDetailsViewModel bookDetailsViewModel)
+		{
+			bookDetailsViewModel.Id = bookModel.Id;
+			bookDetailsViewModel.Title = bookModel.Title;
+			bookDetailsViewModel.Description = bookModel.Description;
+			bookDetailsViewModel.ISBN = bookModel.ISBN;
+			bookDetailsViewModel.Author = bookModel.Author;
+			bookDetailsViewModel.ListPrice = bookModel.ListPrice;
+			bookDetailsViewModel.Price = bookModel.Price;
+			bookDetailsViewModel.Price50 = bookModel.Price50;
+			bookDetailsViewModel.Price100 = bookModel.Price100;
+			bookDetailsViewModel.ImageUrl = bookModel.ImageUrl;
+			bookDetailsViewModel.Category = bookModel.Category.Name;
+		}
+	}
 }
