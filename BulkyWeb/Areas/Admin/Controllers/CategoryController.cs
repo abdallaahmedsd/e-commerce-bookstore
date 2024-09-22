@@ -167,33 +167,6 @@ namespace BulkyWeb.Areas.Admin.Controllers
             }
         }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeletePost(int id)
-        {
-            if (id <= 0)
-                return NotFound();
-
-            try
-            {
-                var category = await _unitOfWork.Category.GetByIdAsync(id);
-
-                if (category == null)
-                    return NotFound();
-
-                _unitOfWork.Category.Remove(category);
-                await _unitOfWork.SaveAsync();
-                TempData["success"] = "Category deleted successfully!";
-                return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
-                // Log exception (ex) here
-                TempData["error"] = "An error occurred while deleting the category.";
-                return View("Error");
-            }
-        }
-
         public async Task<IActionResult> Details(int id)
         {
             if (id <= 0)
