@@ -6,9 +6,9 @@ namespace Bulky.DataAccess.Repository
 {
     public class BookRepository : GenericRepository<TbBook>, IBookRepository
     {
-        private readonly AppDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public BookRepository(AppDbContext context) : base(context)
+        public BookRepository(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }

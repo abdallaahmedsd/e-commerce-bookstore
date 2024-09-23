@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Bulky.DataAccess.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20240919151827_ConfigueOneToManyRelationBetweenCategoryAndBook")]
     partial class ConfigueOneToManyRelationBetweenCategoryAndBook
     {
