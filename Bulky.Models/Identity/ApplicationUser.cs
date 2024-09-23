@@ -2,7 +2,7 @@
 
 namespace Bulky.Models.Identity
 {
-	public class ApplicationUser : IdentityUser<int>
+	public class ApplicationUser : IdentityUser
 	{
 	}
 }
