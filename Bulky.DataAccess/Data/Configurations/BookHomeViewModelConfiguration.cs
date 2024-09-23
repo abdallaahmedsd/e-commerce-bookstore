@@ -11,12 +11,14 @@ namespace Bulky.DataAccess.Data.Configurations
 			builder.HasNoKey()
 				.ToView("BookHome_View");
 
-			builder.Property(b => b.Price100)
+            builder.Property(b => b.ListPrice)
+				.HasColumnType("decimal(18,2)");
+
+            builder.Property(b => b.Price100)
 				.HasColumnType("decimal(18,2)");
 
 			builder.Property(b => b.Price100)
 				.HasColumnType("decimal(18,2)");
 		}
 	}
-
 }
