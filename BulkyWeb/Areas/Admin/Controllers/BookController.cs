@@ -3,11 +3,14 @@ using Bulky.Models;
 using Bulky.Models.ViewModels.Admin;
 using Bulky.Models.ViewModels.Admin.Books;
 using Bulky.Models.ViewModels.Customer;
+using Bulky.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BulkyWeb.Areas.Admin.Controllers
 {
-    [Area("Admin")]
+    [Area(SD.Role_Admin)]
+    [Authorize(Roles  = SD.Role_Admin)]
 	public class BookController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
