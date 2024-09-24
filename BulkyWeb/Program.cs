@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Bulky.Models.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Bulky.Utility;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +20,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
 #region Custom Services
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -11,12 +12,15 @@ using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
 using Bulky.Models.Identity;
+using Bulky.Utility;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 
@@ -54,7 +58,7 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         [BindProperty]
-        public InputModel Input { get; set; }
+        public InputModel Input { get; set; } = new();
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -98,14 +102,41 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
+            [Display(Name = "Confirm Password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
-        }
 
+            [Required]
+            [Display(Name = "Full Name")]
+            public string FullName { get; set; }
+
+            [Display(Name = "User Role")]
+            public string Role { get; set; }
+
+            [ValidateNever]
+            public IEnumerable<SelectListItem> LstRoles { get; set; } 
+        }
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+            // Populate the application roles incase they aren't added yet
+            if(!_roleManager.RoleExistsAsync(SD.Role_Customer).GetAwaiter().GetResult())
+            {
+                _roleManager.CreateAsync(new ApplicationRole(SD.Role_Admin)).GetAwaiter().GetResult();
+                _roleManager.CreateAsync(new ApplicationRole(SD.Role_Customer)).GetAwaiter().GetResult();
+                _roleManager.CreateAsync(new ApplicationRole(SD.Role_Employee)).GetAwaiter().GetResult();
+                _roleManager.CreateAsync(new ApplicationRole(SD.Role_Company)).GetAwaiter().GetResult();
+            }
+
+            Input.LstRoles = _roleManager.Roles
+                .Select(x => x.Name)
+                .Select(x => 
+                new SelectListItem 
+                {
+                    Text = x,
+                    Value = x
+                });
+
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
@@ -118,6 +149,9 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
+                // add custom fields
+                user.Name = Input.FullName;
+
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
@@ -125,6 +159,15 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    if(!string.IsNullOrWhiteSpace(Input.Role))
+                    {
+                        await _userManager.AddToRoleAsync(user, Input.Role);
+                    }
+                    else
+                    {
+                        await _userManager.AddToRoleAsync(user, SD.Role_Customer);
+                    }
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -155,6 +198,18 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
             }
 
             // If we got this far, something failed, redisplay form
+            Input.LstRoles = _roleManager.Roles
+                .Select(x => x.Name)
+                .Select(x =>
+                new SelectListItem
+                {
+                    Text = x,
+                    Value = x
+                });
+
+            ReturnUrl = returnUrl;
+            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
             return Page();
         }
 

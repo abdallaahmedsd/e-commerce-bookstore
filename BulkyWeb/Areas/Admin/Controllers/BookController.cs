@@ -218,7 +218,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
 			try
 			{
-				var bookModel = await _unitOfWork.Book.GetByIdAsync(id);
+				var bookModel = await _unitOfWork.Book.GetByIdAsync(id, "Category");
 
 				if (bookModel == null)
 					return NotFound();
