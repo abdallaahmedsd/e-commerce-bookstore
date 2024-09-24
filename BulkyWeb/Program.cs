@@ -3,7 +3,8 @@ using Bulky.DataAccess.Repository;
 using Bulky.DataAccess.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Bulky.Models.Identity;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Bulky.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,12 +18,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("constr"));
 });
 
-builder.Services.AddDefaultIdentity<IdentityUser>()
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 #region Custom Services
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IReadOnlyRepository<>), typeof(ReadOnlyRepository<>));
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 #endregion
 
 var app = builder.Build();
