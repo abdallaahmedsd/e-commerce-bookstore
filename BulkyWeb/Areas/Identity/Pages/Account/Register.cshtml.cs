@@ -113,6 +113,20 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
             [Display(Name = "User Role")]
             public string Role { get; set; }
 
+            [Display(Name = "Phone Number")]
+            [DataType(DataType.PhoneNumber)]
+            public string? PhoneNumber { get; set; }
+
+            [Display(Name = "Street Address")]
+            public string? StreetAddress { get; set; }
+
+            public string? City { get; set; }
+
+            public string? State { get; set; }
+
+            [Display(Name = "Postal Code")]
+            public string? PostalCode { get; set; }
+
             [ValidateNever]
             public IEnumerable<SelectListItem> LstRoles { get; set; } 
         }
@@ -151,6 +165,11 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
 
                 // add custom fields
                 user.Name = Input.FullName;
+                user.PhoneNumber = Input.PhoneNumber;
+                user.State = Input.State;
+                user.City = Input.City;
+                user.StreetAddress = Input.StreetAddress;
+                user.PostalCode = Input.PostalCode;
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
