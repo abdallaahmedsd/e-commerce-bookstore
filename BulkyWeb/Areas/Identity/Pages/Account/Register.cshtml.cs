@@ -142,16 +142,9 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
                 _roleManager.CreateAsync(new ApplicationRole(SD.Role_Company)).GetAwaiter().GetResult();
             }
 
-            Input.LstRoles = _roleManager.Roles
-                .Select(x => x.Name)
-                .Select(x => 
-                new SelectListItem 
-                {
-                    Text = x,
-                    Value = x
-                });
+            Input.LstRoles = GetRoles();
 
-            ReturnUrl = returnUrl;
+			ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
@@ -164,12 +157,7 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
                 var user = CreateUser();
 
                 // add custom fields
-                user.Name = Input.FullName;
-                user.PhoneNumber = Input.PhoneNumber;
-                user.State = Input.State;
-                user.City = Input.City;
-                user.StreetAddress = Input.StreetAddress;
-                user.PostalCode = Input.PostalCode;
+                PopulateCustomProperties(user);
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -217,14 +205,7 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
             }
 
             // If we got this far, something failed, redisplay form
-            Input.LstRoles = _roleManager.Roles
-                .Select(x => x.Name)
-                .Select(x =>
-                new SelectListItem
-                {
-                    Text = x,
-                    Value = x
-                });
+            Input.LstRoles = GetRoles();
 
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -254,5 +235,29 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
             }
             return (IUserEmailStore<ApplicationUser>)_userStore;
         }
+
+        private IQueryable<SelectListItem> GetRoles()
+        {
+			var roles = _roleManager.Roles
+				.Select(x => x.Name)
+				.Select(x =>
+				new SelectListItem
+				{
+					Text = x,
+					Value = x
+				});
+
+            return roles;
+		}
+
+        private void PopulateCustomProperties(ApplicationUser user)
+        {
+			user.Name = Input.FullName;
+			user.PhoneNumber = Input.PhoneNumber;
+			user.State = Input.State;
+			user.City = Input.City;
+			user.StreetAddress = Input.StreetAddress;
+			user.PostalCode = Input.PostalCode;
+		}
     }
 }
