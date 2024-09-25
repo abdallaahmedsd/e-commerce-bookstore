@@ -4,6 +4,7 @@ using Bulky.Models.ViewModels.Admin;
 using Bulky.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using BulkyWeb.Mappers;
 
 namespace BulkyWeb.Areas.Admin.Controllers
 {
@@ -92,12 +93,8 @@ namespace BulkyWeb.Areas.Admin.Controllers
 				if (categoryModel == null)
 					return NotFound();
 
-				var categoryViewModel = new CategoryViewModel
-				{
-					Id = categoryModel.Id,
-					Name = categoryModel.Name,
-					DisplayOrder = categoryModel.DisplayOrder
-				};
+				var categoryViewModel = new CategoryViewModel();
+				Mapper.Map(categoryModel, categoryViewModel);
 
 				return View(categoryViewModel);
 			}
@@ -153,12 +150,8 @@ namespace BulkyWeb.Areas.Admin.Controllers
 				if (categoryModel == null)
 					return NotFound();
 
-				var categoryViewModel = new CategoryViewModel
-				{
-					Id = categoryModel.Id,
-					Name = categoryModel.Name,
-					DisplayOrder = categoryModel.DisplayOrder
-				};
+				var categoryViewModel = new CategoryViewModel();
+				Mapper.Map(categoryModel, categoryViewModel);
 
 				return View(categoryViewModel);
 			}
@@ -182,12 +175,8 @@ namespace BulkyWeb.Areas.Admin.Controllers
 				if (categoryModel == null)
 					return NotFound();
 
-				var categoryViewModel = new CategoryViewModel
-				{
-					Id = categoryModel.Id,
-					Name = categoryModel.Name,
-					DisplayOrder = categoryModel.DisplayOrder
-				};
+				var categoryViewModel = new CategoryViewModel();
+				Mapper.Map(categoryModel, categoryViewModel);
 
 				return View(categoryViewModel);
 			}

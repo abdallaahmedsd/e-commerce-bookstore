@@ -2,8 +2,8 @@
 using Bulky.Models;
 using Bulky.Models.ViewModels.Admin;
 using Bulky.Models.ViewModels.Admin.Books;
-using Bulky.Models.ViewModels.Customer;
 using Bulky.Utility;
+using BulkyWeb.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -87,7 +87,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
 					TbBook bookModel = new();
 					bookModel.ImageUrl = imageUrl;
-					Mapper(bookViewModel, bookModel);
+					Mapper.Map(bookViewModel, bookModel);
 
 
 					await _unitOfWork.Book.AddAsync(bookModel);
@@ -129,7 +129,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 					return NotFound();
 
 				AddEditBookViewModel bookViewModel = new();
-				Mapper(bookModel, bookViewModel);
+				Mapper.Map(bookModel, bookViewModel);
 
 				List<CategoryViewModel> categories = (await _unitOfWork.Category.GetAllOrderedByDisplayOrderAsync())
 					.Select(x => new CategoryViewModel
@@ -187,7 +187,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 						bookModel.ImageUrl = imageUrl;
 					}
 
-					Mapper(bookViewModel, bookModel);
+					Mapper.Map(bookViewModel, bookModel);
 
 					_unitOfWork.Book.Update(bookModel);
 					await _unitOfWork.SaveAsync();
@@ -227,8 +227,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 					return NotFound();
 
 				BookDetailsViewModel bookDetailsViewModel = new();
-
-				Mapper(bookModel, bookDetailsViewModel);
+				Mapper.Map(bookModel, bookDetailsViewModel);
 
 				return View(bookDetailsViewModel);
 			}
@@ -253,8 +252,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 					return NotFound();
 
 				BookDetailsViewModel bookDetailsViewModel = new();
-
-				Mapper(bookModel, bookDetailsViewModel);
+				Mapper.Map(bookModel, bookDetailsViewModel);
 
 				return View(bookDetailsViewModel);
 			}
@@ -268,57 +266,6 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
 				return View("Error");
 			}
-		}
-
-
-
-
-
-
-
-
-		private static void Mapper(TbBook bookModel, AddEditBookViewModel bookViewModel)
-		{
-			bookViewModel.Id = bookModel.Id;
-			bookViewModel.Title = bookModel.Title;
-			bookViewModel.Description = bookModel.Description;
-			bookViewModel.ISBN = bookModel.ISBN;
-			bookViewModel.Author = bookModel.Author;
-			bookViewModel.ListPrice = bookModel.ListPrice;
-			bookViewModel.Price = bookModel.Price;
-			bookViewModel.Price50 = bookModel.Price50;
-			bookViewModel.Price100 = bookModel.Price100;
-			bookViewModel.ImageUrl = bookModel.ImageUrl;
-			bookViewModel.CategoryId = bookModel.CategoryId;
-		}
-
-		private static void Mapper(AddEditBookViewModel bookViewModel, TbBook bookModel)
-		{
-			bookModel.Title = bookViewModel.Title;
-			bookModel.Description = bookViewModel.Description;
-			bookModel.ISBN = bookViewModel.ISBN;
-			bookModel.Author = bookViewModel.Author;
-			bookModel.ListPrice = bookViewModel.ListPrice;
-			bookModel.Price = bookViewModel.Price;
-			bookModel.Price50 = bookViewModel.Price50;
-			bookModel.Price100 = bookViewModel.Price100;
-			bookModel.CategoryId = bookViewModel.CategoryId;
-			// bookModel.ImageUrl = "";
-		}
-
-		private static void Mapper(TbBook bookModel, BookDetailsViewModel bookDetailsViewModel)
-		{
-			bookDetailsViewModel.Id = bookModel.Id;
-			bookDetailsViewModel.Title = bookModel.Title;
-			bookDetailsViewModel.Description = bookModel.Description;
-			bookDetailsViewModel.ISBN = bookModel.ISBN;
-			bookDetailsViewModel.Author = bookModel.Author;
-			bookDetailsViewModel.ListPrice = bookModel.ListPrice;
-			bookDetailsViewModel.Price = bookModel.Price;
-			bookDetailsViewModel.Price50 = bookModel.Price50;
-			bookDetailsViewModel.Price100 = bookModel.Price100;
-			bookDetailsViewModel.ImageUrl = bookModel.ImageUrl;
-			bookDetailsViewModel.Category = bookModel.Category.Name;
 		}
 	}
 }
