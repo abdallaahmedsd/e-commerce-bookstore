@@ -1,11 +1,14 @@
 ﻿using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models.ViewModels.Admin.Books;
+using Bulky.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BulkyWeb.Areas.Admin.ApiControllers
 {
-    [Route("api/admin/[controller]")]
+	[Route("api/admin/[controller]")]
 	[ApiController]
+	[Authorize(Roles = SD.Role_Admin)]
 	public class BooksController : ControllerBase
 	{
 		private readonly IUnitOfWork _unitOfWork;
@@ -19,20 +22,18 @@ namespace BulkyWeb.Areas.Admin.ApiControllers
 			_webHostEnvironment = webHostEnvironment;
 		}
 
-		[HttpGet()]
+		[HttpGet]
 		public async Task<IActionResult> GetAll()
 		{
 			try
 			{
 				var lstBooks = await _readOnlyRepository.GetAllAsync();
-				return Ok(new { data = lstBooks });
+				return Ok(new { success = true, data = lstBooks });
 			}
 			catch (Exception ex)
 			{
-				// Log the exception (optional)
-				// _logger.LogError(ex, "An error occurred while retrieving categories");
-
-				return StatusCode(500, "An error occurred while processing your request.");
+				// Log the exception details (optional)
+				return StatusCode(500, new { success = false, message = "An error occurred while retrieving books." });
 			}
 		}
 
@@ -40,7 +41,7 @@ namespace BulkyWeb.Areas.Admin.ApiControllers
 		public async Task<IActionResult> Delete(int id)
 		{
 			if (id <= 0)
-				return NotFound(new { success = false, message = $"({id}) is invlaid Id" });
+				return BadRequest(new { success = false, message = $"({id}) is an invalid Id" });
 
 			try
 			{
@@ -49,7 +50,7 @@ namespace BulkyWeb.Areas.Admin.ApiControllers
 				if (book == null)
 					return NotFound(new { success = false, message = $"There's no book with Id = ({id})" });
 
-				// delete old image if the user selected a new image
+				// Delete old image
 				string wwwRootPath = _webHostEnvironment.WebRootPath;
 				string oldImagePath = Path.Combine(wwwRootPath, book.ImageUrl);
 				if (System.IO.File.Exists(oldImagePath))
