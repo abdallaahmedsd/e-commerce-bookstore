@@ -7,6 +7,6 @@ namespace Bulky.Models.Identity
 	{
 		public string Name { get; set; } = null!;
 
-		public AddressInfo ContactInfo { get; set; } = new();
+		public AddressInfo AddressInfo { get; set; } = new();
 	}
 }

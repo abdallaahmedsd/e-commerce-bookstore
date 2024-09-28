@@ -14,23 +14,27 @@ namespace Bulky.DataAccess.Data.Configurations
 				.IsRequired();
 
 			// Configuring AddressInfo as an owned entity
-			builder.OwnsOne(x => x.AddressInfo, address =>
+			builder.OwnsOne(x => x.AddressInfo, contact =>
 			{
-				address.Property(a => a.City)
+				contact.Property(x => x.City)
 					.HasMaxLength(50)
-					.IsRequired(false);
+					.IsRequired(false)
+					.HasColumnName("City");
 
-				address.Property(a => a.State)
+				contact.Property(x => x.State)
 					.HasMaxLength(100)
-					.IsRequired(false);
+					.IsRequired(false)
+					.HasColumnName("State");
 
-				address.Property(a => a.StreetAddress)
+				contact.Property(x => x.StreetAddress)
 					.HasMaxLength(150)
-					.IsRequired(false);
+					.IsRequired(false)
+					.HasColumnName("StreetAddress");
 
-				address.Property(a => a.PostalCode)
+				contact.Property(x => x.PostalCode)
 					.HasMaxLength(20)
-					.IsRequired(false);
+					.IsRequired(false)
+					.HasColumnName("PostalCode");
 			});
 
 			builder.ToTable("Companies");

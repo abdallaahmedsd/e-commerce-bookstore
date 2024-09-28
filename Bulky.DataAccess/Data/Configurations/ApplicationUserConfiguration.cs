@@ -12,7 +12,7 @@ namespace Bulky.DataAccess.Data.Configurations
 				.HasMaxLength(100)
 				.IsRequired();
 
-			builder.OwnsOne(x => x.ContactInfo, contact =>
+			builder.OwnsOne(x => x.AddressInfo, contact =>
 			{
 				contact.Property(x => x.City)
 					.HasMaxLength(50)

@@ -254,10 +254,10 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
         {
 			user.Name = Input.FullName;
 			user.PhoneNumber = Input.PhoneNumber;
-			user.ContactInfo.State = Input.State;
-			user.ContactInfo.City = Input.City;
-			user.ContactInfo.StreetAddress = Input.StreetAddress;
-			user.ContactInfo.PostalCode = Input.PostalCode;
+			user.AddressInfo.State = Input.State;
+			user.AddressInfo.City = Input.City;
+			user.AddressInfo.StreetAddress = Input.StreetAddress;
+			user.AddressInfo.PostalCode = Input.PostalCode;
 		}
     }
 }

@@ -4,6 +4,7 @@ using Bulky.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bulky.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240928140824_CreateCompaniesTable")]
+    partial class CreateCompaniesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -492,7 +495,7 @@ namespace Bulky.DataAccess.Migrations
 
             modelBuilder.Entity("Bulky.Models.Identity.ApplicationUser", b =>
                 {
-                    b.OwnsOne("Bulky.Models.Common.AddressInfo", "AddressInfo", b1 =>
+                    b.OwnsOne("Bulky.Models.Common.AddressInfo", "ContactInfo", b1 =>
                         {
                             b1.Property<int>("ApplicationUserId")
                                 .HasColumnType("int");
@@ -525,7 +528,7 @@ namespace Bulky.DataAccess.Migrations
                                 .HasForeignKey("ApplicationUserId");
                         });
 
-                    b.Navigation("AddressInfo")
+                    b.Navigation("ContactInfo")
                         .IsRequired();
                 });
 
@@ -549,23 +552,19 @@ namespace Bulky.DataAccess.Migrations
 
                             b1.Property<string>("City")
                                 .HasMaxLength(50)
-                                .HasColumnType("nvarchar(50)")
-                                .HasColumnName("City");
+                                .HasColumnType("nvarchar(50)");
 
                             b1.Property<string>("PostalCode")
                                 .HasMaxLength(20)
-                                .HasColumnType("nvarchar(20)")
-                                .HasColumnName("PostalCode");
+                                .HasColumnType("nvarchar(20)");
 
                             b1.Property<string>("State")
                                 .HasMaxLength(100)
-                                .HasColumnType("nvarchar(100)")
-                                .HasColumnName("State");
+                                .HasColumnType("nvarchar(100)");
 
                             b1.Property<string>("StreetAddress")
                                 .HasMaxLength(150)
-                                .HasColumnType("nvarchar(150)")
-                                .HasColumnName("StreetAddress");
+                                .HasColumnType("nvarchar(150)");
 
                             b1.HasKey("TbCompanyId");
 
