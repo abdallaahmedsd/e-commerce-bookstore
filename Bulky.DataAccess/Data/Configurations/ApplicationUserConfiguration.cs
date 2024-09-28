@@ -12,23 +12,30 @@ namespace Bulky.DataAccess.Data.Configurations
 				.HasMaxLength(100)
 				.IsRequired();
 
-            builder.Property(x => x.City)
-				.HasMaxLength(50)
-				.IsRequired(false);
+			builder.OwnsOne(x => x.ContactInfo, contact =>
+			{
+				contact.Property(x => x.City)
+					.HasMaxLength(50)
+					.IsRequired(false)
+					.HasColumnName("City");
 
-            builder.Property(x => x.State)
-                .HasMaxLength(100)
-                .IsRequired(false);
+				contact.Property(x => x.State)
+					.HasMaxLength(100)
+					.IsRequired(false)
+					.HasColumnName("State");
 
-            builder.Property(x => x.StreetAddress)
-                .HasMaxLength(150)
-                .IsRequired(false);
+				contact.Property(x => x.StreetAddress)
+					.HasMaxLength(150)
+					.IsRequired(false)
+					.HasColumnName("StreetAddress");
 
-            builder.Property(x => x.PostalCode)
-                .HasMaxLength(20)
-                .IsRequired(false);
+				contact.Property(x => x.PostalCode)
+					.HasMaxLength(20)
+					.IsRequired(false)
+					.HasColumnName("PostalCode");
+			});
 
-            builder.Property(x => x.PhoneNumber)
+			builder.Property(x => x.PhoneNumber)
                 .HasMaxLength(20)
                 .IsRequired(false);
         }

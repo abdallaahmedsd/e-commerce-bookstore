@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Bulky.Models.Common;
+using Microsoft.AspNetCore.Identity;
 
 namespace Bulky.Models.Identity
 {
@@ -6,12 +7,6 @@ namespace Bulky.Models.Identity
 	{
 		public string Name { get; set; } = null!;
 
-        public string? StreetAddress { get; set; }
-
-        public string? City { get; set; }
-        
-        public string? State { get; set; }
-        
-        public string? PostalCode { get; set; }
-    }
+		public AddressInfo ContactInfo { get; set; } = new();
+	}
 }
