@@ -6,6 +6,8 @@
 
         IBookRepository Book { get; }
 
+        ICompanyRepository Company { get; }
+
         Task SaveAsync();
     }
 }

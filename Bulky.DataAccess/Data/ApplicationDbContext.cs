@@ -11,9 +11,8 @@ namespace Bulky.DataAccess.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         public DbSet<TbCategory> Categories { get; set; }
-
         public DbSet<TbBook> Books { get; set; }   
-        
+        public DbSet<TbCompany> Companies { get; set; } 
         public DbSet<BookListViewModel> BookListView {  get; set; } 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
