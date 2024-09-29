@@ -1,0 +1,72 @@
+﻿@model CompanyViewModel
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="border p-3">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="row">
+                <!-- Name Field -->
+                <div class="form-floating py-2 col-12 col-md-6">
+                    <input asp-for="Name" class="form-control border-0 shadow" />
+                    <label asp-for="Name" class="ms-2"></label>
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <!-- Phone Number Field -->
+                <div class="form-floating py-2 col-12 col-md-6">
+                    <input asp-for="PhoneNumber" class="form-control border-0 shadow" />
+                    <label asp-for="PhoneNumber" class="ms-2"></label>
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Street Address Field -->
+                <div class="form-floating py-2 col-12 col-md-6">
+                    <input asp-for="StreetAddress" class="form-control border-0 shadow" />
+                    <label asp-for="StreetAddress" class="ms-2"></label>
+                    <span asp-validation-for="StreetAddress" class="text-danger"></span>
+                </div>
+
+                <!-- City Field -->
+                <div class="form-floating py-2 col-12 col-md-6">
+                    <input asp-for="City" class="form-control border-0 shadow" />
+                    <label asp-for="City" class="ms-2"></label>
+                    <span asp-validation-for="City" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- State Field -->
+                <div class="form-floating py-2 col-12 col-md-6">
+                    <input asp-for="State" class="form-control border-0 shadow" />
+                    <label asp-for="State" class="ms-2"></label>
+                    <span asp-validation-for="State" class="text-danger"></span>
+                </div>
+
+                <!-- Postal Code Field -->
+                <div class="form-floating py-2 col-12 col-md-6">
+                    <input asp-for="PostalCode" class="form-control border-0 shadow" />
+                    <label asp-for="PostalCode" class="ms-2"></label>
+                    <span asp-validation-for="PostalCode" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="row mt-3">
+            <div class="col-6 col-md-3">
+                <button type="submit" class="btn btn-primary form-control">
+                    @(Model.Id == 0 ? "Create" : "Update")
+                </button>
+            </div>
+            <div class="col-6 col-md-3">
+                <a asp-area="Admin" asp-controller="Company" asp-action="Index" class="btn btn-outline-primary border form-control">
+                    Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

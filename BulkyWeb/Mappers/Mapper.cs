@@ -1,4 +1,5 @@
 ﻿using Bulky.Models;
+using Bulky.Models.Common;
 using Bulky.Models.ViewModels.Admin;
 using Bulky.Models.ViewModels.Admin.Books;
 
@@ -67,5 +68,18 @@ namespace BulkyWeb.Mappers
 			companyViewModel.State = companyModel.AddressInfo.State;
 			companyViewModel.PostalCode = companyModel.AddressInfo.PostalCode;
 		}
-	}
+
+        public static void Map(CompanyViewModel companyViewModel, TbCompany companyModel)
+        {
+            companyModel.Name = companyViewModel.Name;
+            companyModel.PhoneNumber = companyViewModel.PhoneNumber;
+			companyModel.AddressInfo = new AddressInfo
+			{
+                StreetAddress = companyViewModel.StreetAddress,
+				City = companyViewModel.City,
+				State = companyViewModel.State,
+				PostalCode = companyViewModel.PostalCode
+			};
+        }
+    }
 }
