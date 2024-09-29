@@ -7,7 +7,7 @@ namespace BulkyWeb.Areas.Admin.ApiControllers
 {
 	[Route("api/admin/[controller]")]
 	[ApiController]
-	[Authorize(Roles = SD.Role_Admin)]
+	// [Authorize(Roles = SD.Role_Admin)]
 	public class CategoriesController : ControllerBase
 	{
 		private readonly IUnitOfWork _unitOfWork;

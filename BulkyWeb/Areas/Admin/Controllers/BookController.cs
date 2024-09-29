@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BulkyWeb.Areas.Admin.Controllers
 {
     [Area(SD.Role_Admin)]
-    [Authorize(Roles  = SD.Role_Admin)]
+    // [Authorize(Roles  = SD.Role_Admin)]
 	public class BookController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
@@ -24,20 +24,9 @@ namespace BulkyWeb.Areas.Admin.Controllers
 			_webHostEnvironment = webHostEnvironment;
 		}
 
-		public async Task<IActionResult> Index()
+		public IActionResult Index()
 		{
-			try
-			{
-				var lstBooks = await _readOnlyRepository.GetAllAsync();
-
-				return View(lstBooks);
-			}
-			catch (Exception ex)
-			{
-				// Log exception (ex) here
-				TempData["error"] = "An error occurred while retrieving the books.";
-				return View("Error");
-			}
+			return View();
 		}
 
 		public async Task<IActionResult> Create()

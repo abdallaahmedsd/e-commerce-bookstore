@@ -32,6 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Company\Controllers\" />
     <Folder Include="Areas\Company\Views\" />
     <Folder Include="Controllers\" />
     <Folder Include="wwwroot\uploads\images\books\" />

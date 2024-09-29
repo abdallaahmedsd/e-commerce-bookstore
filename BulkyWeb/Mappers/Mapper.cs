@@ -56,5 +56,16 @@ namespace BulkyWeb.Mappers
 			bookDetailsViewModel.ImageUrl = bookModel.ImageUrl;
 			bookDetailsViewModel.Category = bookModel.Category.Name;
 		}
+
+		public static void Map(TbCompany companyModel, CompanyViewModel companyViewModel)
+		{
+			companyViewModel.Id = companyModel.Id;
+			companyViewModel.Name = companyModel.Name;
+			companyViewModel.PhoneNumber = companyModel.PhoneNumber;
+			companyViewModel.StreetAddress = companyModel.AddressInfo.StreetAddress;
+			companyViewModel.City = companyModel.AddressInfo.City;
+			companyViewModel.State = companyModel.AddressInfo.State;
+			companyViewModel.PostalCode = companyModel.AddressInfo.PostalCode;
+		}
 	}
 }

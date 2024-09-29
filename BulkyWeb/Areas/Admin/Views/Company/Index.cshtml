@@ -7,7 +7,7 @@
 	<div class="card-header bg-secondary bg-gradient ml-0 py-2">
 		<div class="row">
 			<div class="col-12 text-center">
-				<h2 class="text-white py-2">Book List</h2>
+				<h2 class="text-white py-2">Company List</h2>
 			</div>
 		</div>
 	</div>
@@ -15,8 +15,8 @@
 	<div class="card-body p-4">
 		<div class="row pb-3">
 			<div class="text-end">
-				<a asp-controller="Book" asp-action="Create" class="btn btn-primary">
-					<i class="bi bi-plus-circle"></i> Create New Book
+				<a asp-controller="Company" asp-action="Create" class="btn btn-primary">
+					<i class="bi bi-plus-circle"></i> Create New Company
 				</a>
 			</div>
 		</div>
@@ -26,11 +26,11 @@
 			<table id="tblTable" class="table table-bordered table-striped">
 				<thead>
 					<tr>
-						<th>Title</th>
-						<th>Author</th>
-						<th>ISBN</th>
-						<th>Price</th>
-						<th>Category</th>
+						<th>Company Name</th>
+						<th>Street Address</th>
+						<th>City</th>
+						<th>State</th>
+						<th>PhoneNumber</th>
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -42,5 +42,5 @@
 @section Scripts
 {
 	<script src="//cdn.datatables.net/2.1.7/js/dataTables.min.js"></script>
-	<script src="~/js/books.js"></script>
+	<script src="~/js/companies.js"></script>
 }
