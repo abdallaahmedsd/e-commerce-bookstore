@@ -12,8 +12,12 @@ internal class CompanyConfiguration : IEntityTypeConfiguration<TbCompany>
 			.HasMaxLength(150)
 			.IsRequired();
 
-		// Configuring AddressInfo as an owned entity
-		builder.OwnsOne(x => x.AddressInfo, contact =>
+        builder.Property(x => x.PhoneNumber)
+			.HasMaxLength(20)
+			.IsRequired(false);
+
+        // Configuring AddressInfo as an owned entity
+        builder.OwnsOne(x => x.AddressInfo, contact =>
 		{
 			contact.Property(x => x.City)
 				.HasMaxLength(50)
@@ -40,9 +44,9 @@ internal class CompanyConfiguration : IEntityTypeConfiguration<TbCompany>
 
 		// Seed data for the TbCompany and AddressInfo
 		builder.HasData(
-			new TbCompany { Id = 1, Name = "Tech Innovations" },
-			new TbCompany { Id = 2, Name = "Global Solutions" },
-			new TbCompany { Id = 3, Name = "Future Enterprises" }
+			new TbCompany { Id = 1, Name = "Tech Innovations", PhoneNumber = "30282123" },
+			new TbCompany { Id = 2, Name = "Global Solutions", PhoneNumber = "40011255" },
+			new TbCompany { Id = 3, Name = "Future Enterprises", PhoneNumber = "50077777" }
 		);
 
 		// Seed data for AddressInfo as part of TbCompany (using the key)
