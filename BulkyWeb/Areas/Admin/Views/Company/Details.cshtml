@@ -1,4 +1,4 @@
-﻿@model BookDetailsViewModel
+﻿@model CompanyViewModel
 
 @{
 	ViewData["Title"] = "Details";
@@ -8,7 +8,7 @@
 	<div class="card-header bg-secondary bg-gradient ml-0 py-2">
 		<div class="row">
 			<div class="col-12 text-center">
-				<h2 class="text-white py-2">Book Details</h2>
+				<h2 class="text-white py-2">Company Details</h2>
 			</div>
 		</div>
 	</div>
@@ -22,50 +22,44 @@
 					@Html.DisplayFor(model => model.Id)
 				</dd>
 				<dt class="col-sm-2">
-					@Html.DisplayNameFor(model => model.Title)
+					@Html.DisplayNameFor(model => model.Name)
 				</dt>
 				<dd class="col-sm-10">
-					@Html.DisplayFor(model => model.Title)
+					@Html.DisplayFor(model => model.Name)
 				</dd>
 				<dt class="col-sm-2">
-					@Html.DisplayNameFor(model => model.Author)
+					@Html.DisplayNameFor(model => model.StreetAddress)
 				</dt>
 				<dd class="col-sm-10">
-					@Html.DisplayFor(model => model.Author)
+					@Html.DisplayFor(model => model.StreetAddress)
 				</dd>
 				<dt class="col-sm-2">
-					@Html.DisplayNameFor(model => model.Description)
+					@Html.DisplayNameFor(model => model.City)
 				</dt>
 				<dd class="col-sm-10">
-					@Html.Raw(Model.Description)
+					@Html.Raw(Model.City)
 				</dd>
 				<dt class="col-sm-2">
-					@Html.DisplayNameFor(model => model.ListPrice)
+					@Html.DisplayNameFor(model => model.State)
 				</dt>
 				<dd class="col-sm-10">
-					@Html.DisplayFor(model => model.ListPrice)
+					@Html.DisplayFor(model => model.State)
 				</dd>
 				<dt class="col-sm-2">
-					@Html.DisplayNameFor(model => model.Price)
+					@Html.DisplayNameFor(model => model.PostalCode)
 				</dt>
 				<dd class="col-sm-10">
-					@Html.DisplayFor(model => model.Price)
+					@Html.DisplayFor(model => model.PostalCode)
 				</dd>
 				<dt class="col-sm-2">
-					@Html.DisplayNameFor(model => model.Price50)
+					@Html.DisplayNameFor(model => model.PhoneNumber)
 				</dt>
 				<dd class="col-sm-10">
-					@Html.DisplayFor(model => model.Price50)
-				</dd>
-				<dt class="col-sm-2">
-					@Html.DisplayNameFor(model => model.Price100)
-				</dt>
-				<dd class="col-sm-10">
-					@Html.DisplayFor(model => model.Price100)
+					@Html.DisplayFor(model => model.PhoneNumber)
 				</dd>
 			</dl>
 			<hr />
-			<a class="btn btn-outline-primary" asp-area="Admin" asp-controller="Book" asp-action="Index">
+			<a class="btn btn-outline-primary" asp-area="Admin" asp-controller="Company" asp-action="Index">
 				Back to List
 			</a>
 		</div>
