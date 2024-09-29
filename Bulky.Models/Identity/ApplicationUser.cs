@@ -8,5 +8,8 @@ namespace Bulky.Models.Identity
 		public string Name { get; set; } = null!;
 
 		public AddressInfo AddressInfo { get; set; } = new();
+
+		public int? CompanyId { get; set; }
+		public TbCompany? Company { get; set; }
 	}
 }

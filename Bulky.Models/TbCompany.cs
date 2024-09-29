@@ -1,4 +1,5 @@
 ﻿using Bulky.Models.Common;
+using Bulky.Models.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,7 @@ namespace Bulky.Models
 		public string Name { get; set; } = null!;
 		public AddressInfo AddressInfo { get; set; } = null!;
         public string? PhoneNumber { get; set; }
+
+		public ICollection<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
     }
 }

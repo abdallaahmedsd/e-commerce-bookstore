@@ -38,6 +38,12 @@ namespace Bulky.DataAccess.Data.Configurations
 			builder.Property(x => x.PhoneNumber)
                 .HasMaxLength(20)
                 .IsRequired(false);
+
+			builder.HasOne(x => x.Company)
+				.WithMany(x => x.Users)
+				.HasForeignKey(x => x.CompanyId)
+				.IsRequired(false)
+				.OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
