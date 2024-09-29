@@ -73,22 +73,14 @@
 						</div>
 						<div class="mb-3 col-md-6">
 							<select asp-for="Input.Role" asp-items="@Model.Input.LstRoles" class="form-select">
-								<option disabled selected>-Select Role-</option>
+								<option disabled selected>Select Role</option>
 							</select>
 						</div>
-						@* @if (User.IsInRole(SD.Role_Admin))
-						{
 						<div class="mb-3 col-md-6">
-						<select asp-for="Input.Role" asp-items="@Model.Input.LstRoles" class="form-select">
-						<option disabled selected>-Select Role-</option>
-						</select>
+							<select style="display:none;" asp-for="Input.CompanyId" asp-items="@Model.Input.LstCompanies" class="form-select">
+								<option disabled selected>Select Company</option>
+							</select>
 						</div>
-						<div class="form-floating mb-3 col-md-6">
-						<select asp-for="Input.CompanyId" style="display:none;" asp-items="@Model.Input.CompanyList" class="form-select">
-						<option disabled selected>-Select Company-</option>
-						</select>
-						</div>
-						} *@
 						<div class="col-12">
 							<button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
 						</div>
@@ -132,22 +124,21 @@
 </div>
 
 @section Scripts {
-	<partial name="_ValidationScriptsPartial" />
-}
-
-@* @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
         $(document).ready(function () {
             $('#Input_Role').change(function(){
-                var selection = $('#Input_Role Option:Selected').text();
-                if(selection=='Company'){
+                var selectedRole = $('#Input_Role Option:Selected').text();
+				console.log(selectedRole);
+                if(selectedRole === 'Company'){
                     $('#Input_CompanyId').show();
+					console.log($('#Input_CompanyId'));
                 }
                 else{
                     $('#Input_CompanyId').hide();
+					console.log($('#Input_CompanyId'));
                 }
             })
         })
     </script>
-} *@
+}

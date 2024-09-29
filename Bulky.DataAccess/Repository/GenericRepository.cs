@@ -5,71 +5,92 @@ using System.Linq.Expressions;
 
 namespace Bulky.DataAccess.Repository
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
-    {
-        private readonly ApplicationDbContext _context;
-        private readonly DbSet<T> _dbSet;
+	public class GenericRepository<T> : IGenericRepository<T> where T : class
+	{
+		private readonly ApplicationDbContext _context;
+		private readonly DbSet<T> _dbSet;
 
-        public GenericRepository(ApplicationDbContext context)
-        {
-            _context = context;
-            _dbSet = _context.Set<T>();
-        }
+		public GenericRepository(ApplicationDbContext context)
+		{
+			_context = context;
+			_dbSet = _context.Set<T>();
+		}
 
-        public async Task AddAsync(T entity)
-        {
-            await _dbSet.AddAsync(entity);
-        }
+		// For advanced querying with IQueryable
+		public IQueryable<T> GetAllQueryable(string? includeProperties = null)
+		{
+			IQueryable<T> query = _dbSet;
+			query = IncludeNavigationProperties(query, includeProperties);
+			return query;
+		}
 
-        public async Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> predicate, string? includeProperties = null)
-        {
-            IQueryable<T> query = _dbSet;
-            query = _IncludeNavigationProperties(query, includeProperties);
-            return await query.Where(predicate).ToListAsync();
-        }
+		// For immediate data retrieval
+		public async Task<IEnumerable<T>> GetAllAsync(string? includeProperties = null)
+		{
+			IQueryable<T> query = _dbSet;
+			query = IncludeNavigationProperties(query, includeProperties);
+			return await query.ToListAsync();
+		}
 
-        public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate, string? includeProperties = null)
-        {
-            IQueryable<T> query = _dbSet;
-            query = _IncludeNavigationProperties(query, includeProperties);
-            return await query.FirstOrDefaultAsync(predicate);
-        }
+		// For filtering with IQueryable
+		public IQueryable<T> FindAllQueryable(Expression<Func<T, bool>> predicate, string? includeProperties = null)
+		{
+			IQueryable<T> query = _dbSet.Where(predicate);
+			query = IncludeNavigationProperties(query, includeProperties);
+			return query;
+		}
 
-        public async Task<IEnumerable<T>> GetAllAsync(string? includeProperties = null)
-        {
-            IQueryable<T> query = _dbSet;
-            query = _IncludeNavigationProperties(query, includeProperties);
-            return await query.ToListAsync();
-        }
+		// For immediate filtered data retrieval
+		public async Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> predicate, string? includeProperties = null)
+		{
+			IQueryable<T> query = _dbSet.Where(predicate);
+			query = IncludeNavigationProperties(query, includeProperties);
+			return await query.ToListAsync();
+		}
 
-        public async Task<T?> GetByIdAsync(int id, string? includeProperties = null)
-        {
-            IQueryable<T> query = _dbSet;
-            query = _IncludeNavigationProperties(query, includeProperties);
-            return await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
-        }
+		// For retrieving a single entity by its ID (using FindAsync)
+		public async Task<T?> GetByIdAsync(int id, string? includeProperties = null)
+		{
+			IQueryable<T> query = _dbSet;
+			query = IncludeNavigationProperties(query, includeProperties);
+			return await _dbSet.FindAsync(id);
+		}
 
-        public void Remove(T entity)
-        {
-            _dbSet.Remove(entity);
-        }
+		// For retrieving a single entity using a custom predicate
+		public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate, string? includeProperties = null)
+		{
+			IQueryable<T> query = _dbSet;
+			query = IncludeNavigationProperties(query, includeProperties);
+			return await query.FirstOrDefaultAsync(predicate);
+		}
 
-        public void RemoveRange(IEnumerable<T> entities)
-        {
-            _dbSet.RemoveRange(entities);
-        }
+		public async Task AddAsync(T entity)
+		{
+			await _dbSet.AddAsync(entity);
+		}
 
-        private IQueryable<T> _IncludeNavigationProperties(IQueryable<T> query, string? includeProperties = null)
-        {
-            if (!string.IsNullOrWhiteSpace(includeProperties))
-            {
-                var properties = includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var property in properties)
-                {
-                    query = query.Include(property);
-                }
-            }
-            return query;
-        }
-    }
+		public void Remove(T entity)
+		{
+			_dbSet.Remove(entity);
+		}
+
+		public void RemoveRange(IEnumerable<T> entities)
+		{
+			_dbSet.RemoveRange(entities);
+		}
+
+		// Helper method for including navigation properties
+		private IQueryable<T> IncludeNavigationProperties(IQueryable<T> query, string? includeProperties = null)
+		{
+			if (!string.IsNullOrWhiteSpace(includeProperties))
+			{
+				var properties = includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+				foreach (var property in properties)
+				{
+					query = query.Include(property);
+				}
+			}
+			return query;
+		}
+	}
 }

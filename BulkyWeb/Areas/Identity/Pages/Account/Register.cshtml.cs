@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models.Identity;
 using Bulky.Utility;
 using Microsoft.AspNetCore.Authentication;
@@ -35,6 +36,7 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IUnitOfWork _unitOfWork;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
@@ -42,7 +44,8 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -51,6 +54,7 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -129,7 +133,12 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
 
             [ValidateNever]
             public IEnumerable<SelectListItem> LstRoles { get; set; } 
-        }
+
+            public int? CompanyId {  get; set; }
+
+			[ValidateNever]
+			public IEnumerable<SelectListItem> LstCompanies { get; set; }
+		}
 
         public async Task OnGetAsync(string returnUrl = null)
         {
@@ -142,7 +151,8 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
                 _roleManager.CreateAsync(new ApplicationRole(SD.Role_Company)).GetAwaiter().GetResult();
             }
 
-            Input.LstRoles = GetRoles();
+            Input.LstRoles = GetRoles().ToList();
+            Input.LstCompanies = GetCompanies().ToList();
 
 			ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -250,7 +260,20 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
             return roles;
 		}
 
-        private void PopulateCustomProperties(ApplicationUser user)
+		private IQueryable<SelectListItem> GetCompanies()
+		{
+			var companies = _unitOfWork.Company
+				.GetAllQueryable() // Assuming GetAllAsync is returning IQueryable
+				.Select(x => new SelectListItem
+				{
+					Text = x.Name,
+					Value = x.Id.ToString()
+				}); // This will execute the query and project it in the database
+
+			return companies;
+		}
+
+		private void PopulateCustomProperties(ApplicationUser user)
         {
 			user.Name = Input.FullName;
 			user.PhoneNumber = Input.PhoneNumber;
@@ -258,6 +281,9 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
 			user.AddressInfo.City = Input.City;
 			user.AddressInfo.StreetAddress = Input.StreetAddress;
 			user.AddressInfo.PostalCode = Input.PostalCode;
+
+			if (Input.Role == SD.Role_Company && Input.CompanyId != null)
+				user.CompanyId = Input.CompanyId;
 		}
     }
 }
