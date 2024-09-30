@@ -14,6 +14,8 @@ namespace Bulky.DataAccess.Data
         public DbSet<TbBook> Books { get; set; }   
         public DbSet<TbCompany> Companies { get; set; } 
         public DbSet<BookListViewModel> BookListView {  get; set; } 
+        public DbSet<TbShoppingCart> ShoppingCarts { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
