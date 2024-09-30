@@ -48,12 +48,11 @@ namespace Bulky.DataAccess.Repository
 			return await query.ToListAsync();
 		}
 
-		// For retrieving a single entity by its ID (using FindAsync)
 		public async Task<T?> GetByIdAsync(int id, string? includeProperties = null)
 		{
 			IQueryable<T> query = _dbSet;
 			query = IncludeNavigationProperties(query, includeProperties);
-			return await _dbSet.FindAsync(id);
+			return await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
 		}
 
 		// For retrieving a single entity using a custom predicate
