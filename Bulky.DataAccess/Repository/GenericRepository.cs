@@ -17,48 +17,75 @@ namespace Bulky.DataAccess.Repository
 		}
 
 		// For advanced querying with IQueryable
-		public IQueryable<T> GetAllQueryable(string? includeProperties = null)
+		public IQueryable<T> GetAllQueryable(string? includeProperties = null, bool tracked = false)
 		{
 			IQueryable<T> query = _dbSet;
+
+			if (!tracked)
+				query = query.AsNoTracking();
+
 			query = IncludeNavigationProperties(query, includeProperties);
 			return query;
 		}
 
 		// For immediate data retrieval
-		public async Task<IEnumerable<T>> GetAllAsync(string? includeProperties = null)
+		public async Task<IEnumerable<T>> GetAllAsync(string? includeProperties = null, bool tracked = false)
 		{
 			IQueryable<T> query = _dbSet;
+
+			if (!tracked)
+				query = query.AsNoTracking();
+
 			query = IncludeNavigationProperties(query, includeProperties);
 			return await query.ToListAsync();
 		}
 
 		// For filtering with IQueryable
-		public IQueryable<T> FindAllQueryable(Expression<Func<T, bool>> predicate, string? includeProperties = null)
+		public IQueryable<T> FindAllQueryable(Expression<Func<T, bool>> predicate, string? includeProperties = null, bool tracked = false)
 		{
-			IQueryable<T> query = _dbSet.Where(predicate);
+			IQueryable<T> query = _dbSet;
+
+			if (!tracked)
+				query = query.AsNoTracking();
+
+			query = query.Where(predicate);
 			query = IncludeNavigationProperties(query, includeProperties);
 			return query;
 		}
 
 		// For immediate filtered data retrieval
-		public async Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> predicate, string? includeProperties = null)
+		public async Task<IEnumerable<T>> FindAllAsync(Expression<Func<T, bool>> predicate, string? includeProperties = null, bool tracked = false)
 		{
-			IQueryable<T> query = _dbSet.Where(predicate);
-			query = IncludeNavigationProperties(query, includeProperties);
+			IQueryable<T> query = _dbSet;
+
+			if (!tracked)
+				query = query.AsNoTracking();  // Apply AsNoTracking before the filter
+
+			query = query.Where(predicate);  // Apply the filter
+			query = IncludeNavigationProperties(query, includeProperties);  // Include any related entities
+
 			return await query.ToListAsync();
 		}
 
-		public async Task<T?> GetByIdAsync(int id, string? includeProperties = null)
+		public async Task<T?> GetByIdAsync(int id, string? includeProperties = null, bool tracked = false)
 		{
 			IQueryable<T> query = _dbSet;
+
+			if (!tracked)
+				query = query.AsNoTracking();
+
 			query = IncludeNavigationProperties(query, includeProperties);
 			return await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id);
 		}
 
 		// For retrieving a single entity using a custom predicate
-		public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate, string? includeProperties = null)
+		public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate, string? includeProperties = null, bool tracked = false)
 		{
 			IQueryable<T> query = _dbSet;
+
+			if (!tracked)
+				query = query.AsNoTracking();
+
 			query = IncludeNavigationProperties(query, includeProperties);
 			return await query.FirstOrDefaultAsync(predicate);
 		}
@@ -93,3 +120,4 @@ namespace Bulky.DataAccess.Repository
 		}
 	}
 }
+
