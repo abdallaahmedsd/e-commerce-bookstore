@@ -1,26 +1,27 @@
 using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models;
 using Bulky.Models.ViewModels;
-using Bulky.Models.ViewModels.Admin.Books;
 using Bulky.Models.ViewModels.Customer;
+using BulkyWeb.Mappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+using System.Security.Claims;
 
 namespace BulkyWeb.Areas.Customer.Controllers
 {
-    [Area("Customer")]
-    public class HomeController : Controller
-    {
-        private readonly ILogger<HomeController> _logger;
+	[Area("Customer")]
+	public class HomeController : Controller
+	{
+		private readonly ILogger<HomeController> _logger;
 		private readonly IUnitOfWork _unitOfWork;
 		private readonly IReadOnlyRepository<BookHomeViewModel> _readOnlyRepository;
 
 		public HomeController(IUnitOfWork unitOfWork, IReadOnlyRepository<BookHomeViewModel> readOnlyRepository, ILogger<HomeController> logger)
-        {
+		{
 			_unitOfWork = unitOfWork;
 			_readOnlyRepository = readOnlyRepository;
 			_logger = logger;
-        }
+		}
 
 		public async Task<IActionResult> Index()
 		{
@@ -29,21 +30,21 @@ namespace BulkyWeb.Areas.Customer.Controllers
 				var lstBooks = await _readOnlyRepository.GetAllAsync();
 
 				// order them randomly 
-				lstBooks = [.. lstBooks.OrderBy(x => Guid.NewGuid())];
+				lstBooks = lstBooks.OrderBy(x => Guid.NewGuid()).ToList();
 				return View(lstBooks);
 			}
 			catch (Exception ex)
 			{
-				// Log exception (ex) here
+				// _logger.LogError(ex, "An error occurred while retrieving the books.");
 				TempData["error"] = "An error occurred while retrieving the books.";
 				return View("Error");
 			}
 		}
 
 		public IActionResult Privacy()
-        {
-            return View();
-        }
+		{
+			return View();
+		}
 
 		public async Task<IActionResult> Details(int bookId)
 		{
@@ -57,43 +58,69 @@ namespace BulkyWeb.Areas.Customer.Controllers
 				if (bookModel == null)
 					return NotFound();
 
-				BookDetailsViewModel bookDetailsViewModel = new();
+				ShoppingCartViewModel shoppingCartViewModel = new();
 
-				Mapper(bookModel, bookDetailsViewModel);
+				Mapper.Map(bookModel, shoppingCartViewModel);
 
-				return View(bookDetailsViewModel);
+				// set the quantity to one by default
+				shoppingCartViewModel.Quantity = 1;
+
+				return View(shoppingCartViewModel);
 			}
 			catch (Exception ex)
 			{
-				// Log exception (ex) here
+				// _logger.LogError(ex, "An error occurred while retrieving book details.");
 				TempData["error"] = "An error occurred while retrieving book details.";
-
-				/* ErrorViewModel model = new ErrorViewModel() { RequestId = Guid.NewGuid().ToString() };
-                 return View("Error", model);*/
-
 				return View("Error");
 			}
 		}
 
-		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-		private static void Mapper(TbBook bookModel, BookDetailsViewModel bookDetailsViewModel)
+		[HttpPost]
+		[Authorize]
+		[ActionName("Details")]
+		public async Task<IActionResult> AddToCart(AddToCartViewModel viewModel)
 		{
-			bookDetailsViewModel.Id = bookModel.Id;
-			bookDetailsViewModel.Title = bookModel.Title;
-			bookDetailsViewModel.Description = bookModel.Description;
-			bookDetailsViewModel.ISBN = bookModel.ISBN;
-			bookDetailsViewModel.Author = bookModel.Author;
-			bookDetailsViewModel.ListPrice = bookModel.ListPrice;
-			bookDetailsViewModel.Price = bookModel.Price;
-			bookDetailsViewModel.Price50 = bookModel.Price50;
-			bookDetailsViewModel.Price100 = bookModel.Price100;
-			bookDetailsViewModel.ImageUrl = bookModel.ImageUrl;
-			bookDetailsViewModel.Category = bookModel.Category.Name;
+			try
+			{
+				if (ModelState.IsValid)
+				{
+					ClaimsIdentity claimsIdentity = (ClaimsIdentity)User?.Identity;
+					int userId = int.Parse(claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+					var cartFromDb = await _unitOfWork.ShoppingCart.GetAsync(x => x.UserId == userId && x.BookId == viewModel.BookId);
+
+					if (cartFromDb != null)
+					{
+						// update the quantity
+						cartFromDb.Quantity += viewModel.Quantity;
+						_unitOfWork.ShoppingCart.Update(cartFromDb);
+					}
+					else
+					{
+						// create new 
+						var shoppingCart = new TbShoppingCart
+						{
+							UserId = userId,
+							Quantity = viewModel.Quantity,
+							BookId = viewModel.BookId
+						};
+
+						await _unitOfWork.ShoppingCart.AddAsync(shoppingCart);
+					}
+
+					await _unitOfWork.SaveAsync();
+					TempData["success"] = "Item added to the cart successfully!";
+					return RedirectToAction(nameof(Index));
+				}
+
+				return View("Details", new { viewModel.BookId });
+			}
+			catch (Exception ex)
+			{
+				// _logger.LogError(ex, "An error occurred while adding the book to the cart.");
+				TempData["error"] = "An error occurred while adding the book to the cart.";
+				return View("Error");
+			}
 		}
 	}
 }

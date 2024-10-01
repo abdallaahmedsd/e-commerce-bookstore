@@ -2,7 +2,7 @@
 
 namespace Bulky.Models.ViewModels.Admin.Books
 {
-    public class BookDetailsViewModel
+	public class BookDetailsViewModel
     {
         public int Id { get; set; }
 

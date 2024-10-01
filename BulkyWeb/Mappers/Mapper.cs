@@ -1,11 +1,12 @@
 ﻿using Bulky.Models;
 using Bulky.Models.Common;
+using Bulky.Models.ViewModels;
 using Bulky.Models.ViewModels.Admin;
 using Bulky.Models.ViewModels.Admin.Books;
 
 namespace BulkyWeb.Mappers
 {
-	public static class Mapper
+    public static class Mapper
 	{
 		public static void Map(TbCategory model, CategoryViewModel viewModel)
 		{
@@ -81,5 +82,11 @@ namespace BulkyWeb.Mappers
 				PostalCode = companyViewModel.PostalCode
 			};
         }
-    }
+
+		public static void Map(TbBook bookModel, ShoppingCartViewModel shoppingCartViewModel)
+		{
+			shoppingCartViewModel.BookDetails = new();
+			Map(bookModel, shoppingCartViewModel.BookDetails);
+		}
+	}
 }
