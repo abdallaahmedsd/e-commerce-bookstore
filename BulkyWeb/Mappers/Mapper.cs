@@ -44,7 +44,7 @@ namespace BulkyWeb.Mappers
 			// bookModel.ImageUrl = "";
 		}
 
-		public static void Map(TbBook bookModel, BookDetailsViewModel bookDetailsViewModel)
+		public static void Map(TbBook bookModel, BookDetailsForAdminViewModel bookDetailsViewModel)
 		{
 			bookDetailsViewModel.Id = bookModel.Id;
 			bookDetailsViewModel.Title = bookModel.Title;
@@ -83,7 +83,7 @@ namespace BulkyWeb.Mappers
 			};
         }
 
-		public static void Map(TbBook bookModel, ShoppingCartViewModel shoppingCartViewModel)
+		public static void Map(TbBook bookModel, BookDetailsViewModel shoppingCartViewModel)
 		{
 			shoppingCartViewModel.BookDetails = new();
 			Map(bookModel, shoppingCartViewModel.BookDetails);

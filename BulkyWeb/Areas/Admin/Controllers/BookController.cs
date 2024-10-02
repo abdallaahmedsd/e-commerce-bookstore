@@ -215,7 +215,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 				if (bookModel == null)
 					return NotFound();
 
-				BookDetailsViewModel bookDetailsViewModel = new();
+				BookDetailsForAdminViewModel bookDetailsViewModel = new();
 				Mapper.Map(bookModel, bookDetailsViewModel);
 
 				return View(bookDetailsViewModel);
@@ -240,7 +240,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 				if (bookModel == null)
 					return NotFound();
 
-				BookDetailsViewModel bookDetailsViewModel = new();
+				BookDetailsForAdminViewModel bookDetailsViewModel = new();
 				Mapper.Map(bookModel, bookDetailsViewModel);
 
 				return View(bookDetailsViewModel);

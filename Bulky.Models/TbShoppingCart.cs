@@ -1,4 +1,5 @@
 ﻿using Bulky.Models.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bulky.Models
 {
@@ -13,5 +14,8 @@ namespace Bulky.Models
 
         public int UserId { get; set; }
         public ApplicationUser User { get; set; } = null!;
+
+        [NotMapped]
+        public decimal Price { get; set; }
     }
 }

@@ -58,7 +58,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
 				if (bookModel == null)
 					return NotFound();
 
-				ShoppingCartViewModel shoppingCartViewModel = new();
+				BookDetailsViewModel shoppingCartViewModel = new();
 
 				Mapper.Map(bookModel, shoppingCartViewModel);
 

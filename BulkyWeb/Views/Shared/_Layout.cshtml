@@ -53,6 +53,12 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index">
+                                <icon class="bi bi-cart"></icon>&nbsp; (<span class="qart-quantity">0</span>)
+                            </a>
+                        </li>
                     </ul>
 
                     <partial name="_LoginPartial" />
