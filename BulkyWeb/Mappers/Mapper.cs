@@ -3,6 +3,7 @@ using Bulky.Models.Common;
 using Bulky.Models.ViewModels;
 using Bulky.Models.ViewModels.Admin;
 using Bulky.Models.ViewModels.Admin.Books;
+using Bulky.Models.ViewModels.Customer;
 
 namespace BulkyWeb.Mappers
 {

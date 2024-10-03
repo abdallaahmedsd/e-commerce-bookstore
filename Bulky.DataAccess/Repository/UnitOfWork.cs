@@ -16,6 +16,8 @@ namespace Bulky.DataAccess.Repository
             Company = new CompanyRepository(_context);
             ShoppingCart = new ShoppingCartRepository(_context);
             ApplicationUser = new ApplicationUserRepository(_context);
+            Order = new OrderRepository(_context);
+            OrderDetail = new OrderDetailRepository(_context);
         }
 
         public ICategoryRepository Category { get; private set; }
@@ -24,7 +26,11 @@ namespace Bulky.DataAccess.Repository
         public IShoppingCartRepository ShoppingCart { get; private set; }
         public IApplicationUserRepository ApplicationUser { get; private set; }
 
-        public async Task SaveAsync()
+		public IOrderRepository Order { get; private set; }
+
+		public IOrderDetailRepository OrderDetail { get; private set; }
+
+		public async Task SaveAsync()
         {
             await _context.SaveChangesAsync();
         }
