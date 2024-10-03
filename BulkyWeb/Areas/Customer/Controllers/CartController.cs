@@ -93,6 +93,11 @@ namespace BulkyWeb.Areas.Customer.Controllers
 			return RedirectToAction(nameof(Index));
 		}
 
+        public IActionResult Summary()
+        {
+            return View();
+        }
+
 		private decimal _GetPriceBasedOnQuantity(TbShoppingCart cart)
         {
             if(cart.Quantity <= 50) 
