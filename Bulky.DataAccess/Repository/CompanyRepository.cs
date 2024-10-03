@@ -6,9 +6,9 @@ namespace Bulky.DataAccess.Repository
 {
 	public class CompanyRepository : GenericRepository<TbCompany>, ICompanyRepository
 	{
-		private readonly ApplicationDbContext _context;
+		private readonly AppDbContext _context;
 
-		public CompanyRepository(ApplicationDbContext context) : base(context)
+		public CompanyRepository(AppDbContext context) : base(context)
 		{
 			_context = context;
 		}

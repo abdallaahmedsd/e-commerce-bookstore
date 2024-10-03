@@ -6,9 +6,9 @@ namespace Bulky.DataAccess.Repository
 {
     public class ShoppingCartRepository : GenericRepository<TbShoppingCart>, IShoppingCartRepository
     {
-        private readonly ApplicationDbContext _context;
+        private readonly AppDbContext _context;
 
-        public ShoppingCartRepository(ApplicationDbContext context) : base(context)
+        public ShoppingCartRepository(AppDbContext context) : base(context)
         {
             _context = context;
         }

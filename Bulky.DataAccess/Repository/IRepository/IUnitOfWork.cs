@@ -7,6 +7,8 @@
         ICompanyRepository Company { get; }
         IShoppingCartRepository ShoppingCart { get; }
         IApplicationUserRepository ApplicationUser { get; }
+        IOrderRepository Order { get; }
+        IOrderDetailRepository OrderDetail { get; }
 
         Task SaveAsync();
     }

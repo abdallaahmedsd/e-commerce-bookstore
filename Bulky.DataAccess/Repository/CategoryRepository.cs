@@ -7,9 +7,9 @@ namespace Bulky.DataAccess.Repository
 {
     public class CategoryRepository : GenericRepository<TbCategory>, ICategoryRepository
     {
-        private readonly ApplicationDbContext _context;
+        private readonly AppDbContext _context;
 
-        public CategoryRepository(ApplicationDbContext context) : base(context)
+        public CategoryRepository(AppDbContext context) : base(context)
         {
             _context = context;
         }

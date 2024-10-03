@@ -7,9 +7,9 @@ namespace Bulky.DataAccess.Repository
 {
     public class ApplicationUserRepository : GenericRepository<ApplicationUser>, IApplicationUserRepository
     {
-        private readonly ApplicationDbContext _context;
+        private readonly AppDbContext _context;
 
-        public ApplicationUserRepository(ApplicationDbContext context) : base(context)
+        public ApplicationUserRepository(AppDbContext context) : base(context)
         {
             _context = context;
         }

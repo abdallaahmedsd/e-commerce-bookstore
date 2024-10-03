@@ -7,10 +7,10 @@ namespace Bulky.DataAccess.Repository
 {
 	public class GenericRepository<T> : IGenericRepository<T> where T : class
 	{
-		private readonly ApplicationDbContext _context;
+		private readonly AppDbContext _context;
 		private readonly DbSet<T> _dbSet;
 
-		public GenericRepository(ApplicationDbContext context)
+		public GenericRepository(AppDbContext context)
 		{
 			_context = context;
 			_dbSet = _context.Set<T>();

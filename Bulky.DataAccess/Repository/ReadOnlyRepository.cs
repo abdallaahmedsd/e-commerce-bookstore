@@ -6,10 +6,10 @@ namespace Bulky.DataAccess.Repository
 {
     public class ReadOnlyRepository<T> : IReadOnlyRepository<T> where T : class
     {
-        protected readonly ApplicationDbContext _context;
+        protected readonly AppDbContext _context;
         protected readonly DbSet<T> _dbSet;
 
-        public ReadOnlyRepository(ApplicationDbContext context)
+        public ReadOnlyRepository(AppDbContext context)
         {
             _context = context;
             _dbSet = _context.Set<T>();
