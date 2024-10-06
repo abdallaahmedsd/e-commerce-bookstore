@@ -1,6 +1,7 @@
 ﻿using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models;
 using Bulky.Models.ViewModels.Customer;
+using BulkyWeb.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -28,6 +29,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
             var shoppingCartsViewModel = new ShoppingCartViewModel 
             {
                 LstShoppingCarts = shoppingCarts,
+                Order = new()
             };
 
             _CalcOrderTotal(shoppingCartsViewModel);
@@ -93,9 +95,26 @@ namespace BulkyWeb.Areas.Customer.Controllers
 			return RedirectToAction(nameof(Index));
 		}
 
-        public IActionResult Summary()
+        public async Task<IActionResult> Summary()
         {
-            return View();
+			ClaimsIdentity claimsIdentity = (ClaimsIdentity)User?.Identity;
+			int userId = int.Parse(claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+			var shoppingCarts = await _unitOfWork.ShoppingCart.FindAllAsync(x => x.UserId == userId, "Book");
+
+			var shoppingCartsViewModel = new ShoppingCartViewModel
+			{
+				LstShoppingCarts = shoppingCarts,
+				Order = new()
+			};
+
+			shoppingCartsViewModel.Order.User = await _unitOfWork.ApplicationUser?.GetByIdAsync(userId);
+
+            Mapper.Map(shoppingCartsViewModel.Order.User, shoppingCartsViewModel.Order);
+
+			_CalcOrderTotal(shoppingCartsViewModel);
+
+			return View(shoppingCartsViewModel);
         }
 
 		private decimal _GetPriceBasedOnQuantity(TbShoppingCart cart)
@@ -119,7 +138,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
             {
                 cart.Price = _GetPriceBasedOnQuantity(cart);
 
-                cartVM.OrderTotal += (cart.Price * cart.Quantity);
+				cartVM.Order.OrderTotal += (cart.Price * cart.Quantity);
             }
         }
 	}

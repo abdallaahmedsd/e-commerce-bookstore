@@ -1,5 +1,7 @@
 ﻿using Bulky.Models;
 using Bulky.Models.Common;
+using Bulky.Models.Identity;
+using Bulky.Models.Orders;
 using Bulky.Models.ViewModels;
 using Bulky.Models.ViewModels.Admin;
 using Bulky.Models.ViewModels.Admin.Books;
@@ -88,6 +90,17 @@ namespace BulkyWeb.Mappers
 		{
 			shoppingCartViewModel.BookDetails = new();
 			Map(bookModel, shoppingCartViewModel.BookDetails);
+		}
+
+		public static void Map(ApplicationUser user, TbOrder order)
+		{
+			order.Name = user.Name;
+			order.PhoneNumber = user.PhoneNumber;
+			order.City = user.AddressInfo.City;
+			order.StreetAddress = user.AddressInfo.StreetAddress;
+			order.State = user.AddressInfo.State;
+			order.State = user.AddressInfo.State;
+			order.PostalCode = user.AddressInfo.PostalCode;
 		}
 	}
 }
