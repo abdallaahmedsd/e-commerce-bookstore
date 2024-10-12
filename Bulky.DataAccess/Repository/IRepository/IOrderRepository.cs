@@ -5,5 +5,9 @@ namespace Bulky.DataAccess.Repository.IRepository
     public interface IOrderRepository : IGenericRepository<TbOrder>
     {
         void Update(TbOrder entity);
+
+        void UpdateStatus(int id, string newStatus, string? newPaymentStatus);
+
+        void UpdateStripePaymentId(int id, string sessionId, string paymentIntentId);
     }
 }

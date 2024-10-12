@@ -23,6 +23,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.5" />
+    <PackageReference Include="Stripe.net" Version="46.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,8 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Company\Controllers\" />
-    <Folder Include="Areas\Company\Views\" />
     <Folder Include="Controllers\" />
     <Folder Include="wwwroot\uploads\images\books\" />
   </ItemGroup>

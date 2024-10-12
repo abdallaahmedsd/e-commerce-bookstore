@@ -18,5 +18,32 @@ namespace Bulky.DataAccess.Repository
         {
             _context.Orders.Update(entity);
         }
-    }
+
+		public void UpdateStatus(int id, string newStatus, string? newPaymentStatus)
+		{
+			TbOrder? order = _context.Orders.Find(id);
+
+            if (order != null) 
+            {
+                order.OrderStatus = newStatus;
+
+                if(!string.IsNullOrWhiteSpace(newPaymentStatus))
+                    order.PaymentStatus = newPaymentStatus;
+            }
+		}
+
+		public void UpdateStripePaymentId(int id, string sessionId, string paymentIntentId)
+		{
+			TbOrder? order = _context.Orders.Find(id);
+
+			if (order != null)
+			{
+				if (!string.IsNullOrWhiteSpace(sessionId))
+					order.SessionId = sessionId;
+
+				if (!string.IsNullOrWhiteSpace(sessionId))
+					order.PaymentIntentId = paymentIntentId;
+			}
+		}
+	}
 }

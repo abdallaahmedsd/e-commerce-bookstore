@@ -7,6 +7,7 @@ using Bulky.Utility;
 using BulkyWeb.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Stripe.Checkout;
 using System.Security.Claims;
 
 namespace BulkyWeb.Areas.Customer.Controllers
@@ -17,158 +18,278 @@ namespace BulkyWeb.Areas.Customer.Controllers
 	{
 		private readonly IUnitOfWork _unitOfWork;
 
-        [BindProperty]
-        public ShoppingCartViewModel ShoppingCartViewModel { get; set; } 
+		[BindProperty]
+		public ShoppingCartViewModel ShoppingCartViewModel { get; set; }
 
-        public CartController(IUnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
-
-        public async Task<IActionResult> Index()
+		public CartController(IUnitOfWork unitOfWork)
 		{
-            ClaimsIdentity claimsIdentity = (ClaimsIdentity)User?.Identity;
-            int userId = int.Parse(claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            var shoppingCarts = await _unitOfWork.ShoppingCart.FindAllAsync(x => x.UserId == userId, "Book");
-
-            ShoppingCartViewModel = new ShoppingCartViewModel 
-            {
-                LstShoppingCarts = shoppingCarts,
-                Order = new()
-            };
-
-            _CalcOrderTotal(ShoppingCartViewModel);
-
-			return View(ShoppingCartViewModel);
+			_unitOfWork = unitOfWork;
 		}
 
-        public async Task<IActionResult> IncrementQuantity(int cartId) 
-        {
-			if (cartId <= 0)
-				return BadRequest();
+		public async Task<IActionResult> Index()
+		{
+			try
+			{
+				ClaimsIdentity claimsIdentity = (ClaimsIdentity)User?.Identity;
+				int userId = int.Parse(claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-			var cartFromDb = await _unitOfWork.ShoppingCart.GetAsync(x => x.Id == cartId);
+				var shoppingCarts = await _unitOfWork.ShoppingCart.FindAllAsync(x => x.UserId == userId, "Book");
 
-            if(cartFromDb == null)
-                return NotFound();
+				ShoppingCartViewModel = new ShoppingCartViewModel
+				{
+					LstShoppingCarts = shoppingCarts,
+					Order = new()
+				};
 
-            cartFromDb.Quantity++;
-            _unitOfWork.ShoppingCart.Update(cartFromDb);
-            await _unitOfWork.SaveAsync();
+				_CalcOrderTotal(ShoppingCartViewModel);
 
-            return RedirectToAction(nameof(Index));
-        }
+				return View(ShoppingCartViewModel);
+			}
+			catch (Exception ex)
+			{
+				TempData["Error"] = "An error occurred while loading the cart. Please try again.";
+				// Log the exception (ex) if needed
+				return View(new ShoppingCartViewModel()); // Return an empty view model
+			}
+		}
+
+		public async Task<IActionResult> IncrementQuantity(int cartId)
+		{
+			try
+			{
+				if (cartId <= 0)
+					return BadRequest();
+
+				var cartFromDb = await _unitOfWork.ShoppingCart.GetAsync(x => x.Id == cartId);
+
+				if (cartFromDb == null)
+					return NotFound();
+
+				cartFromDb.Quantity++;
+				_unitOfWork.ShoppingCart.Update(cartFromDb);
+				await _unitOfWork.SaveAsync();
+
+				TempData["Success"] = "Quantity incremented successfully.";
+				return RedirectToAction(nameof(Index));
+			}
+			catch (Exception ex)
+			{
+				TempData["Error"] = "An error occurred while incrementing quantity. Please try again.";
+				return RedirectToAction(nameof(Index));
+			}
+		}
 
 		public async Task<IActionResult> DecrementQuantity(int cartId)
 		{
-			if (cartId <= 0)
-				return BadRequest();
+			try
+			{
+				if (cartId <= 0)
+					return BadRequest();
 
-			var cartFromDb = await _unitOfWork.ShoppingCart.GetAsync(x => x.Id == cartId);
+				var cartFromDb = await _unitOfWork.ShoppingCart.GetAsync(x => x.Id == cartId);
 
-			if (cartFromDb == null)
-				return NotFound();
+				if (cartFromDb == null)
+					return NotFound();
 
-            if(cartFromDb.Quantity <= 1)
-            {
-                _unitOfWork.ShoppingCart.Remove(cartFromDb);
-            }
-            else
-            {
-				cartFromDb.Quantity--;
-				_unitOfWork.ShoppingCart.Update(cartFromDb);
+				if (cartFromDb.Quantity <= 1)
+				{
+					_unitOfWork.ShoppingCart.Remove(cartFromDb);
+					TempData["Success"] = "Item removed from cart.";
+				}
+				else
+				{
+					cartFromDb.Quantity--;
+					_unitOfWork.ShoppingCart.Update(cartFromDb);
+					TempData["Success"] = "Quantity decremented successfully.";
+				}
+
+				await _unitOfWork.SaveAsync();
+				return RedirectToAction(nameof(Index));
 			}
-
-			await _unitOfWork.SaveAsync();
-
-			return RedirectToAction(nameof(Index));
+			catch (Exception ex)
+			{
+				TempData["Error"] = "An error occurred while decrementing quantity. Please try again.";
+				return RedirectToAction(nameof(Index));
+			}
 		}
 
 		public async Task<IActionResult> Delete(int cartId)
 		{
-			if (cartId <= 0)
-				return BadRequest();
+			try
+			{
+				if (cartId <= 0)
+					return BadRequest();
 
-			var cartFromDb = await _unitOfWork.ShoppingCart.GetAsync(x => x.Id == cartId);
+				var cartFromDb = await _unitOfWork.ShoppingCart.GetAsync(x => x.Id == cartId);
 
-			if (cartFromDb == null)
-				return NotFound();
+				if (cartFromDb == null)
+					return NotFound();
 
-			_unitOfWork.ShoppingCart.Remove(cartFromDb);
-			await _unitOfWork.SaveAsync();
+				_unitOfWork.ShoppingCart.Remove(cartFromDb);
+				await _unitOfWork.SaveAsync();
 
-			return RedirectToAction(nameof(Index));
+				TempData["Success"] = "Item deleted from cart successfully.";
+				return RedirectToAction(nameof(Index));
+			}
+			catch (Exception ex)
+			{
+				TempData["Error"] = "An error occurred while deleting item from cart. Please try again.";
+				return RedirectToAction(nameof(Index));
+			}
 		}
 
-        public async Task<IActionResult> Summary()
-        {
-			ClaimsIdentity claimsIdentity = (ClaimsIdentity)User?.Identity;
-			int userId = int.Parse(claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-			var shoppingCarts = await _unitOfWork.ShoppingCart.FindAllAsync(x => x.UserId == userId, "Book");
-
-			ShoppingCartViewModel = new ShoppingCartViewModel
+		public async Task<IActionResult> Summary()
+		{
+			try
 			{
-				LstShoppingCarts = shoppingCarts,
-				Order = new()
-			};
+				ClaimsIdentity claimsIdentity = (ClaimsIdentity)User?.Identity;
+				int userId = int.Parse(claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-			ShoppingCartViewModel.Order.User = await _unitOfWork.ApplicationUser?.GetByIdAsync(userId);
+				var shoppingCarts = await _unitOfWork.ShoppingCart.FindAllAsync(x => x.UserId == userId, "Book");
 
-            Mapper.Map(ShoppingCartViewModel.Order.User, ShoppingCartViewModel.Order);
+				ShoppingCartViewModel = new ShoppingCartViewModel
+				{
+					LstShoppingCarts = shoppingCarts,
+					Order = new()
+				};
 
-			_CalcOrderTotal(ShoppingCartViewModel);
+				ShoppingCartViewModel.Order.User = await _unitOfWork.ApplicationUser?.GetByIdAsync(userId);
 
-			return View(ShoppingCartViewModel);
-        }
+				Mapper.Map(ShoppingCartViewModel.Order.User, ShoppingCartViewModel.Order);
+
+				_CalcOrderTotal(ShoppingCartViewModel);
+
+				return View(ShoppingCartViewModel);
+			}
+			catch (Exception ex)
+			{
+				TempData["Error"] = "An error occurred while loading the summary. Please try again.";
+				return View(new ShoppingCartViewModel()); // Return an empty view model
+			}
+		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[ActionName("Summary")]
 		public async Task<IActionResult> PlaceOrder()
 		{
-			ClaimsIdentity claimsIdentity = (ClaimsIdentity)User?.Identity;
-			int userId = int.Parse(claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-			var shoppingCarts = await _unitOfWork.ShoppingCart.FindAllAsync(x => x.UserId == userId, "Book");
-
-			ShoppingCartViewModel.LstShoppingCarts = shoppingCarts;
-
-			ShoppingCartViewModel.Order.OrderDate = DateTime.Now;
-			ShoppingCartViewModel.Order.UserId = userId;
-
-			_CalcOrderTotal(ShoppingCartViewModel);
-
-			ApplicationUser? user = await _unitOfWork.ApplicationUser.GetByIdAsync(userId);
-
-			_SetOrderStatus(ShoppingCartViewModel, user);
-
-			// create the order 
-			await _unitOfWork.Order.AddAsync(ShoppingCartViewModel.Order);
-			await _unitOfWork.SaveAsync();
-
-			// save order details
-			foreach(var item in  ShoppingCartViewModel.LstShoppingCarts)
+			try
 			{
-				TbOrderDetail detail = new()
+				ClaimsIdentity claimsIdentity = (ClaimsIdentity)User?.Identity;
+				int userId = int.Parse(claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+				var shoppingCarts = await _unitOfWork.ShoppingCart.FindAllAsync(x => x.UserId == userId, "Book");
+
+				ShoppingCartViewModel.LstShoppingCarts = shoppingCarts;
+
+				ShoppingCartViewModel.Order.OrderDate = DateTime.Now;
+				ShoppingCartViewModel.Order.UserId = userId;
+
+				_CalcOrderTotal(ShoppingCartViewModel);
+
+				ApplicationUser? user = await _unitOfWork.ApplicationUser.GetByIdAsync(userId);
+
+				_SetOrderStatus(ShoppingCartViewModel, user);
+
+				// create the order 
+				await _unitOfWork.Order.AddAsync(ShoppingCartViewModel.Order);
+				await _unitOfWork.SaveAsync();
+
+				// create order details
+				foreach (var item in ShoppingCartViewModel.LstShoppingCarts)
 				{
-					OrderId = ShoppingCartViewModel.Order.Id,
-					BookId = item.BookId,
-					Price = item.Price,
-					Quantity = item.Quantity,
-				};
+					TbOrderDetail detail = new()
+					{
+						OrderId = ShoppingCartViewModel.Order.Id,
+						BookId = item.BookId,
+						Price = item.Price,
+						Quantity = item.Quantity,
+					};
 
-				await _unitOfWork.OrderDetail.AddAsync(detail);
+					await _unitOfWork.OrderDetail.AddAsync(detail);
+				}
+
+				// save order details
+				await _unitOfWork.SaveAsync();
+
+				// if it is a regular customer account we need to capture payment
+				if (user.CompanyId.GetValueOrDefault() == 0)
+				{
+					//stripe logic
+					var domain = "https://localhost:7250/";
+					var options = new SessionCreateOptions
+					{
+						SuccessUrl = domain + $"customer/cart/OrderConfirmation?orderId={ShoppingCartViewModel.Order.Id}",
+						CancelUrl = domain + "customer/cart/index",
+						LineItems = new List<SessionLineItemOptions>(),
+						Mode = "payment",
+					};
+
+					foreach (var item in ShoppingCartViewModel.LstShoppingCarts)
+					{
+						var sessionLineItem = new SessionLineItemOptions
+						{
+							PriceData = new SessionLineItemPriceDataOptions
+							{
+								UnitAmount = (long)(item.Price * 100), // Price in cents
+								Currency = "usd",
+								ProductData = new SessionLineItemPriceDataProductDataOptions
+								{
+									Name = item.Book.Title
+								}
+							},
+							Quantity = item.Quantity
+						};
+						options.LineItems.Add(sessionLineItem);
+					}
+
+					var service = new SessionService();
+					Session session = service.Create(options);
+
+					_unitOfWork.Order.UpdateStripePaymentId(ShoppingCartViewModel.Order.Id, session.Id, session.PaymentIntentId);
+					await _unitOfWork.SaveAsync();
+
+					Response.Headers.Add("Location", session.Url);
+
+					return new StatusCodeResult(303);
+				}
+
+				TempData["Success"] = "Order placed successfully.";
+				return RedirectToAction(nameof(OrderConfirmation), new { orderId = ShoppingCartViewModel.Order.Id });
 			}
-
-			await _unitOfWork.SaveAsync();
-
-			return RedirectToAction(nameof(OrderConfirmation), new { orderId = ShoppingCartViewModel.Order.Id });
+			catch (Exception ex)
+			{
+				TempData["Error"] = "An error occurred while placing the order. Please try again.";
+				return RedirectToAction(nameof(Summary));
+			}
 		}
 
-		public IActionResult OrderConfirmation(int orderId)
+		public async Task<IActionResult> OrderConfirmation(int orderId)
 		{
+			TbOrder? order = await _unitOfWork.Order.GetAsync(u => u.Id == orderId, includeProperties: "User");
+			
+			if (order != null)
+			{
+				if(order.PaymentStatus != SD.PaymentStatusDelayedPayment)
+				{
+					//this is an order by customer
+					var service = new SessionService();
+					Session session = service.Get(order.SessionId);
+
+					if (session.PaymentStatus.ToLower() == "paid")
+					{
+						_unitOfWork.Order.UpdateStripePaymentId(orderId, session.Id, session.PaymentIntentId);
+						_unitOfWork.Order.UpdateStatus(orderId, SD.StatusApproved, SD.PaymentStatusApproved);
+						await _unitOfWork.SaveAsync();
+					}
+				}
+
+				IEnumerable<TbShoppingCart> shoppingCarts = await _unitOfWork.ShoppingCart.FindAllAsync(u => u.UserId == order.UserId);
+
+				_unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
+				await _unitOfWork.SaveAsync();
+			}
+
 			return View(orderId);
 		}
 
