@@ -46,10 +46,10 @@ function loadDataTable(selectedStatus) {
                 render: function (data) {
                     return `
                         <div class="btn-group" role="group">
-                            <a href="/admin/order/details/${data}" class="btn btn-primary mx-2">
+                            <a href="/admin/order/details?orderId=${data}" class="btn btn-primary mx-2">
                                 <i class="bi bi-info-lg"></i>
                             </a>
-                            <a href="/admin/order/edit/${data}" class="btn btn-warning mx-2">
+                            <a href="/admin/order/edit?orderId=${data}" class="btn btn-warning mx-2">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
                         </div>`;

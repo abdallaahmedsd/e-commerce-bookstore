@@ -1,9 +1,9 @@
 ﻿using Bulky.DataAccess.Repository.IRepository;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using System;
 using Bulky.Utility;
+using Bulky.Models.Orders;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BulkyWeb.Areas.Admin.ApiControllers
 {
@@ -19,11 +19,23 @@ namespace BulkyWeb.Areas.Admin.ApiControllers
         }
 
         [HttpGet]
+		[Authorize]
 		public IActionResult GetAll(string status = "all")
 		{
 			try
 			{
-				var lstOrders = _unitOfWork.Order.GetAllQueryable(includeProperties: "User");
+				IQueryable<TbOrder> lstOrders;
+				if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+				{
+					lstOrders = _unitOfWork.Order.GetAllQueryable(includeProperties: "User");
+				}
+				else
+				{
+					ClaimsIdentity claimsIdentity = (ClaimsIdentity)User.Identity;
+					int userId = int.Parse(claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+					lstOrders = _unitOfWork.Order.FindAllQueryable(x => x.UserId == userId ,includeProperties: "User");
+				}
 
 				switch (status)
 				{

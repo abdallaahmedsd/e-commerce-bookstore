@@ -102,5 +102,20 @@ namespace BulkyWeb.Mappers
 			order.State = user.AddressInfo.State;
 			order.PostalCode = user.AddressInfo.PostalCode;
 		}
+
+		public static void Map(OrderViewModel orderViewModel, TbOrder order)
+		{
+			order.Name = orderViewModel.Order.Name;
+			order.StreetAddress = orderViewModel.Order.StreetAddress;
+			order.PhoneNumber = orderViewModel.Order.PhoneNumber;
+			order.State = orderViewModel.Order.State;
+			order.City = orderViewModel.Order.City;
+
+			if (!string.IsNullOrEmpty(orderViewModel.Order.Carrier))
+				order.Carrier = orderViewModel.Order.Carrier;
+
+			if (!string.IsNullOrEmpty(orderViewModel.Order.TrackingNumber))
+				order.TrackingNumber = orderViewModel.Order.TrackingNumber;
+		}
 	}
 }

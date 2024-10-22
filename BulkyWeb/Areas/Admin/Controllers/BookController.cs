@@ -78,7 +78,6 @@ namespace BulkyWeb.Areas.Admin.Controllers
 					bookModel.ImageUrl = imageUrl;
 					Mapper.Map(bookViewModel, bookModel);
 
-
 					await _unitOfWork.Book.AddAsync(bookModel);
 
 					await _unitOfWork.SaveAsync();
