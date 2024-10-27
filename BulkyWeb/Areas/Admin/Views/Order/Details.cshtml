@@ -127,7 +127,7 @@
 									<div class="col-9">
 										@if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
 										{
-											<input asp-for="Order.Carrier" type="text" class="form-control" />
+											<input id="carrier" asp-for="Order.Carrier" type="text" class="form-control" />
 										}
 										else
 										{
@@ -140,7 +140,7 @@
 									<div class="col-9">
 										@if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
 										{
-											<input asp-for="Order.TrackingNumber" type="text" class="form-control" />
+											<input id="trackingNumber" asp-for="Order.TrackingNumber" type="text" class="form-control" />
 										}
 										else
 										{
@@ -192,7 +192,7 @@
 										<input readonly asp-for="Order.PaymentStatus" type="text" class="form-control" />
 									</div>
 								</div>
-								@if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+								@if ((User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee)) && Model.Order.OrderStatus != SD.StatusCanceled)
 								{
 									<button asp-action="UpdateOrderDetails" type="submit" class="btn btn-warning form-control my-1">
 										Update Order Details
@@ -234,10 +234,28 @@
 										</div>
 									</li>
 								</ul>
-								<input type="submit" class="btn btn-success form-control my-1" value="Pay Now" />
-								<input type="submit" class="btn btn-primary form-control my-1" value="Start Processing" />
-								<input type="submit" class="btn btn-primary form-control my-1" value="Ship Order" />
-								<input type="submit" class="btn btn-danger form-control my-1" value="Cancel Order" />
+								@if (Model.Order.PaymentStatus == SD.PaymentStatusDelayedPayment
+																&& Model.Order.OrderStatus == SD.StatusShipped)
+								{
+									<button asp-action="Details" type="submit" class="btn btn-success form-control my-1">Pay Now</button>
+								}
+								@if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+								{
+									if (Model.Order.OrderStatus == SD.StatusApproved)
+									{
+										<button asp-action="StartProccessing" type="submit" class="btn btn-primary form-control my-1">Start Processing</button>
+									}
+									if(Model.Order.OrderStatus == SD.StatusInProcess)
+									{
+										<button asp-action="ShipOrder" onclick="return ValidateInput()" type="submit" class="btn btn-primary form-control my-1">Ship Order</button>
+									}
+									if (Model.Order.OrderStatus != SD.StatusRefunded
+									&& Model.Order.OrderStatus != SD.StatusCanceled
+									&& Model.Order.OrderStatus != SD.StatusShipped)
+									{
+										<button asp-action="CancelOrder" type="submit" class="btn btn-danger form-control my-1">Cancel Order</button>
+									}
+								}
 							</div>
 						</div>
 					</div>
@@ -246,3 +264,35 @@
 		</div>
 	</form>
 </div>
+
+@section Scripts
+{
+	<partial name="_ValidationScriptsPartial" />
+	<script>
+		function ValidateInput() {
+			let carrier = document.getElementById("carrier");
+			if (!carrier.value) {
+				Swal.fire({
+					icon: 'error',
+					title: 'Oops...',
+					text: "Please enter carrier!"
+				});
+
+				return false;
+			}
+
+			let trackingNumber = document.getElementById("trackingNumber");
+			if (!trackingNumber.value) {
+				Swal.fire({
+					icon: 'error',
+					title: 'Oops...',
+					text: "Please enter tracking number!"
+				});
+
+				return false;
+			}
+
+			return true;
+		}
+	</script>
+}

@@ -19,7 +19,7 @@ namespace Bulky.DataAccess.Repository
             _context.Orders.Update(entity);
         }
 
-		public void UpdateStatus(int id, string newStatus, string? newPaymentStatus)
+		public void UpdateStatus(int id, string newStatus, string? newPaymentStatus = null)
 		{
 			TbOrder? order = _context.Orders.Find(id);
 

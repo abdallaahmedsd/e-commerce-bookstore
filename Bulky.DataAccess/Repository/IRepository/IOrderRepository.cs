@@ -6,7 +6,7 @@ namespace Bulky.DataAccess.Repository.IRepository
     {
         void Update(TbOrder entity);
 
-        void UpdateStatus(int id, string newStatus, string? newPaymentStatus);
+        void UpdateStatus(int id, string newStatus, string? newPaymentStatus = null);
 
         void UpdateStripePaymentId(int id, string sessionId, string paymentIntentId);
     }
