@@ -9,6 +9,7 @@ namespace BulkyWeb.Areas.Admin.ApiControllers
 {
 	[Route("api/admin/[controller]")]
 	[ApiController]
+	[Authorize]
 	public class OrdersController : ControllerBase
 	{
 		private readonly IUnitOfWork _unitOfWork;
@@ -19,7 +20,6 @@ namespace BulkyWeb.Areas.Admin.ApiControllers
         }
 
         [HttpGet]
-		[Authorize]
 		public IActionResult GetAll(string status = "all")
 		{
 			try
