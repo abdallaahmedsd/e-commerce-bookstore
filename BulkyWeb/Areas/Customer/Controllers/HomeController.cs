@@ -28,17 +28,6 @@ namespace BulkyWeb.Areas.Customer.Controllers
         {
             try
             {
-                ClaimsIdentity claimsIdentity = (ClaimsIdentity)User?.Identity;
-                var claim = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier);
-
-                if (claim != null)
-                {
-                    int userId = int.Parse(claim.Value);
-                    // update number of shopping cart items
-                    _SaveCartQuantityInSession(userId);
-                }
-
-
                 var lstBooks = await _readOnlyRepository.GetAllAsync();
 
                 // order them randomly 

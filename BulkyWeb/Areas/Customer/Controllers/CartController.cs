@@ -91,9 +91,9 @@ namespace BulkyWeb.Areas.Customer.Controllers
                 if (cartFromDb == null)
                     return NotFound();
 
-                bool oneItem = cartFromDb.Quantity <= 1;
+                bool isOneItem = cartFromDb.Quantity <= 1;
 
-                if (oneItem)
+                if (isOneItem)
                 {
                     _unitOfWork.ShoppingCart.Remove(cartFromDb);
                     TempData["Success"] = "Item removed from cart.";
@@ -107,7 +107,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
 
                 await _unitOfWork.SaveAsync();
 
-                if(oneItem) 
+                if (isOneItem)
                     _SaveCartQuantityInSession(cartFromDb.UserId);
 
                 return RedirectToAction(nameof(Index));
