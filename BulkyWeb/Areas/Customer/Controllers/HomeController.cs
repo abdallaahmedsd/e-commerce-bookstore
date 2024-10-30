@@ -2,9 +2,11 @@ using Bulky.DataAccess.Repository.IRepository;
 using Bulky.Models;
 using Bulky.Models.ViewModels;
 using Bulky.Models.ViewModels.Customer;
+using Bulky.Utility;
 using BulkyWeb.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Stripe.BillingPortal;
 using System.Security.Claims;
 
 namespace BulkyWeb.Areas.Customer.Controllers
@@ -109,6 +111,11 @@ namespace BulkyWeb.Areas.Customer.Controllers
 					}
 
 					await _unitOfWork.SaveAsync();
+
+					// update number of shopping cart items
+					int cartQuantity = _unitOfWork.ShoppingCart.FindAllQueryable(x => x.UserId == userId).Count();
+					HttpContext.Session.SetInt32(SD.SessionCart, cartQuantity);
+
 					TempData["success"] = "Item added to the cart successfully!";
 					return RedirectToAction(nameof(Index));
 				}

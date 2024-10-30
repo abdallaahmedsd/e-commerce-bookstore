@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    int cartQantity = HttpContextAccessor?.HttpContext?.Session.GetInt32(SD.SessionCart) ?? 0;
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -59,7 +66,7 @@
 
                         <li class="nav-item">
                             <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index">
-                                <icon class="bi bi-cart"></icon>&nbsp; (<span class="qart-quantity">0</span>)
+                                <icon class="bi bi-cart"></icon>&nbsp; (<span class="qart-quantity">@cartQantity</span>)
                             </a>
                         </li>
                     </ul>
