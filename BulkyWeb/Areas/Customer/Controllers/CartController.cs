@@ -296,6 +296,9 @@ namespace BulkyWeb.Areas.Customer.Controllers
 
                 _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
                 await _unitOfWork.SaveAsync();
+
+                // clear the card quantity from session
+                HttpContext.Session.Remove(SD.SessionCart);
             }
 
             return View(orderId);
