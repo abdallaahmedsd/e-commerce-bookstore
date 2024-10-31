@@ -204,7 +204,14 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        // if there is already a signed in user with Admin role
+                        // this means that this user has been added by them
+                        // so we show them a message insated of sign them in
+                        if (User.IsInRole(SD.Role_Admin))
+                            TempData["success"] = "New user created successfully!";
+                        else
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+
                         return LocalRedirect(returnUrl);
                     }
                 }
