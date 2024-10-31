@@ -138,6 +138,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
             catch (Exception ex)
             {
                 TempData["error"] = "An error occurred while retrieving the cart quantity.";
+                throw;
             }
         }
     }
