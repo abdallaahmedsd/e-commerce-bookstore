@@ -167,7 +167,7 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
                 var user = CreateUser();
 
                 // add custom fields
-                PopulateCustomProperties(user);
+                _PopulateCustomProperties(user);
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -273,7 +273,7 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
 			return companies;
 		}
 
-		private void PopulateCustomProperties(ApplicationUser user)
+		private void _PopulateCustomProperties(ApplicationUser user)
         {
 			user.Name = Input.FullName;
 			user.PhoneNumber = Input.PhoneNumber;

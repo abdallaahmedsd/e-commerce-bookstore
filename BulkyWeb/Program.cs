@@ -39,6 +39,7 @@ builder.Services.AddScoped(typeof(IReadOnlyRepository<>), typeof(ReadOnlyReposit
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 #endregion
 
+#region Session Management
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
@@ -46,6 +47,15 @@ builder.Services.AddSession(options =>
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
+#endregion
+
+#region Facebook Authentication
+builder.Services.AddAuthentication().AddFacebook(options =>
+{
+    options.AppId = builder.Configuration.GetSection("Facebook:AppId").Value;
+    options.AppSecret = builder.Configuration.GetSection("Facebook:AppSecret").Value;
+});
+#endregion
 
 var app = builder.Build();
 
