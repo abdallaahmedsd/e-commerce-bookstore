@@ -2,6 +2,7 @@
 using Bulky.Models.Identity;
 using Bulky.Models.Orders;
 using Bulky.Models.ViewModels.Admin.Books;
+using Bulky.Models.ViewModels.Customer;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,7 @@ namespace Bulky.DataAccess.Data
         public DbSet<TbBook> Books { get; set; }   
         public DbSet<TbCompany> Companies { get; set; } 
         public DbSet<BookListViewModel> BookListView {  get; set; } 
+        public DbSet<BookHomeViewModel> BookHomeView {  get; set; } 
         public DbSet<TbShoppingCart> ShoppingCarts { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<TbOrder> Orders { get; set; }

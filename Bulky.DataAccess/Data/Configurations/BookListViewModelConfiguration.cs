@@ -15,5 +15,4 @@ namespace Bulky.DataAccess.Data.Configurations
                    .HasColumnType("decimal(18,2)");
         }
     }
-
 }

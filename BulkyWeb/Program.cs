@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Bulky.Utility;
 using Microsoft.AspNetCore.Identity;
 using Stripe;
+using Bulky.DataAccess.DbInitializer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,7 @@ builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Str
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IReadOnlyRepository<>), typeof(ReadOnlyRepository<>));
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 #endregion
 
 #region Session Management
@@ -58,6 +60,8 @@ builder.Services.AddAuthentication().AddFacebook(options =>
 #endregion
 
 var app = builder.Build();
+
+SeedDatabase();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -87,3 +91,12 @@ app.MapControllerRoute(
 app.MapRazorPages();
 
 app.Run();
+
+void SeedDatabase()
+{
+	using (IServiceScope scope = app.Services.CreateScope())
+    {
+		IDbInitializer dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+        dbInitializer.Initialize();
+    }
+}

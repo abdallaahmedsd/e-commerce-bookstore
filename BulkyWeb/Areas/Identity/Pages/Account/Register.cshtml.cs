@@ -142,15 +142,6 @@ namespace BulkyWeb.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            // Populate the application roles incase they aren't added yet
-            if(!_roleManager.RoleExistsAsync(SD.Role_Customer).GetAwaiter().GetResult())
-            {
-                _roleManager.CreateAsync(new ApplicationRole(SD.Role_Admin)).GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new ApplicationRole(SD.Role_Customer)).GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new ApplicationRole(SD.Role_Employee)).GetAwaiter().GetResult();
-                _roleManager.CreateAsync(new ApplicationRole(SD.Role_Company)).GetAwaiter().GetResult();
-            }
-
             Input.LstRoles = GetRoles().ToList();
             Input.LstCompanies = GetCompanies().ToList();
 
