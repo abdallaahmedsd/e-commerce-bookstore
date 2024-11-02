@@ -224,7 +224,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
                 if (user.CompanyId.GetValueOrDefault() == 0)
                 {
                     //stripe logic
-                    var domain = "https://localhost:7250/";
+                    var domain = Request.Scheme + "://" + Request.Host.Value + "/";
                     var options = new SessionCreateOptions
                     {
                         SuccessUrl = domain + $"customer/cart/OrderConfirmation?orderId={ShoppingCartViewModel.Order.Id}",
