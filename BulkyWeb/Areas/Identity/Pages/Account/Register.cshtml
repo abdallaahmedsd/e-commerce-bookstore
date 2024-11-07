@@ -134,14 +134,11 @@
 		$(document).ready(function () {
 			$('#Input_Role').change(function () {
 				var selectedRole = $('#Input_Role Option:Selected').text();
-				console.log(selectedRole);
 				if (selectedRole === 'Company') {
 					$('#Input_CompanyId').show();
-					console.log($('#Input_CompanyId'));
 				}
 				else {
 					$('#Input_CompanyId').hide();
-					console.log($('#Input_CompanyId'));
 				}
 			})
 		})

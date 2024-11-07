@@ -39,7 +39,7 @@ function loadDataTable() {
                             <a onclick="lockUnlock(${data.id})" class="btn btn-${buttonColor} mx-2" style="width: 100px">
                                 <i class="bi bi-${lockUnlockIcon}-fill"></i> ${lockUnlockString}
                             </a>
-                            <a href="/admin/company/edit/${data.id}" class="btn btn-warning">
+                            <a href="/admin/user/roleManagement?userId=${data.id}" class="btn btn-warning">
                                 <i class="bi bi-pencil-square"></i> Permissions
                             </a>
                         </div>`;

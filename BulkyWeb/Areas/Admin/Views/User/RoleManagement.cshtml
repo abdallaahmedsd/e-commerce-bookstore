@@ -1,0 +1,71 @@
+﻿@model UserPermissionsViewModel
+
+@{
+    SelectList companies = new SelectList(Model.Companies, "Id", "Name");
+}
+
+<div class="card shadow border-0">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-2">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Change User Permission</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <form asp-area="Admin" asp-controller="User" asp-action="ChangePermission" method="post" class="row">
+            <div class="row mt-4">
+                <div class="border p-3">
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="form-floating py-2 col-12">
+                        <input asp-for="Name" class="form-control border-0 shadow" readonly />
+                        <label asp-for="Name" class="ms-2"></label>
+                    </div>
+                    <div class="form-floating py-2 col-12">
+                        <select asp-for="Role" asp-items="Model.Roles" class="form-select border-0 shadow">
+                        </select>
+                        <label asp-for="Role" class="ms-2"></label>
+                    </div>
+                    <div class="form-floating py-2 col-12 @(Model.CompanyId == null ? "d-none" : "")" id="CompanyContainer">
+                        <select asp-for="CompanyId" asp-items="companies" class="form-select border-0 shadow" id="CompanyId">
+                            <option selected disabled value="">Select Company</option>
+                        </select>
+                        <label asp-for="CompanyId" class="ms-2"></label>
+                        <span asp-validation-for="CompanyId" class="text-danger"></span>
+                    </div>
+
+                    <hr />
+                    <div class="row mt-3">
+                        <div class="col-6 col-md-3">
+                            <button type="submit" class="btn btn-primary form-control">Update</button>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <a asp-area="Admin" asp-controller="User" asp-action="Index" class="btn btn-outline-primary border form-control">
+                                Back to List
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            $('#Role').change(function () {
+                var selectedRole = $('#Role option:selected').text();
+                if (selectedRole === 'Company') {
+                    $('#CompanyContainer').removeClass('d-none');
+                    $('#CompanyId').attr('required', 'required'); // Make CompanyId required
+                } else {
+                    $('#CompanyContainer').addClass('d-none');
+                    $('#CompanyId').removeAttr('required'); // Remove required attribute if not 'Company'
+                }
+            });
+        });
+    </script>
+}
