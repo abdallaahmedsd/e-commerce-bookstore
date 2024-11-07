@@ -58,6 +58,12 @@ namespace BulkyWeb.Areas.Admin.Controllers
 					return Json(new { success = false, message = $"There is no user with the Id = {userId}" });
 				}
 
+				// if this user is the main user (admin) return false because we can't lock the main user
+				if (!userFromDb.LockoutEnabled)
+				{
+					return Json(new { success = false, message = "Ooobs! You cannot lock this user, they are the main user in this system." });
+				}	
+
 				string result = "";
 
 				// if the user is already locked we need to unlock them, otherwise lock the user

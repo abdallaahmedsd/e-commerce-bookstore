@@ -53,7 +53,8 @@ namespace Bulky.DataAccess.DbInitializer
 							City = "Khartoum",
 							State = "Sudan",
 							PostalCode = "11111"
-						}
+						},
+						LockoutEnabled = false,
 					};
 
 					// Attempt to create the new admin user with a preset password
