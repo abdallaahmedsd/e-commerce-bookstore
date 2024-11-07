@@ -45,6 +45,45 @@ namespace BulkyWeb.Areas.Admin.Controllers
 				return StatusCode(500, new { success = false, message = "An error occurred while retrieving users." });
 			}
 		}
+
+		[HttpPost]
+		public async Task<IActionResult> LockUnLock([FromBody]int userId)
+		{
+			try
+			{
+				var userFromDb = _dbContext.Users.Find(userId);
+
+				if (userFromDb == null)
+				{
+					return Json(new { success = false, message = $"There is no user with the Id = {userId}" });
+				}
+
+				string result = "";
+
+				// if the user is already locked we need to unlock them, otherwise lock the user
+				if (userFromDb.LockoutEnd > DateTime.Now) 
+				{
+					// unlock the user
+					userFromDb.LockoutEnd = DateTime.Now;
+					result = "unlocked";
+				}
+				else
+				{
+					// lock the user for a 1000 years
+					userFromDb.LockoutEnd = DateTime.Now.AddYears(1000);
+					result = "locked";
+				}
+
+				await _dbContext.SaveChangesAsync();
+
+				return Json(new { success = true, message = $"User has been {result} successfully!" });
+			}
+			catch (Exception ex)
+			{
+				// Log the exception details (optional)
+				return StatusCode(500, new { success = false, message = "An error occurred while lock/unLock user." });
+			}
+		}
 		#endregion
 	}
 }
