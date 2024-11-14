@@ -24,6 +24,6 @@
 
         public TbCategory Category { get; set; } = null!;
 
-        public ICollection<TbBookImage> Images { get; set; } = new List<TbBookImage>();
+        public ICollection<TbBookImage> BookImages { get; set; } = new List<TbBookImage>();
     }
 }

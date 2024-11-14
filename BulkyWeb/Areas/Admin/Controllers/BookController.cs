@@ -57,30 +57,48 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(AddEditBookViewModel bookViewModel, IFormFile file)
+		public async Task<IActionResult> Create(AddEditBookViewModel bookViewModel, List<IFormFile> files)
 		{
 			if (ModelState.IsValid)
 			{
 				try
 				{
-					string wwwRootPath = _webHostEnvironment.WebRootPath;
-					string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-					string bookPath = Path.Combine(wwwRootPath, @"uploads\images\books\");
-
-					using (var fileStream = new FileStream(Path.Combine(bookPath, fileName), FileMode.Create))
-					{
-						await file.CopyToAsync(fileStream);
-					}
-
-					string imageUrl = @"uploads\images\books\" + fileName;
-
 					TbBook bookModel = new();
-					// bookModel.ImageUrl = imageUrl;
 					Mapper.Map(bookViewModel, bookModel);
 
 					await _unitOfWork.Book.AddAsync(bookModel);
 
 					await _unitOfWork.SaveAsync();
+
+					// save book images
+					string wwwRootPath = _webHostEnvironment.WebRootPath;
+					foreach(var file in files)
+					{
+						string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+						string bookPath = @"uploads\images\books\book-" + bookModel.Id; 
+						string finalPath = Path.Combine(wwwRootPath, bookPath);
+
+						if(!Directory.Exists(finalPath))
+							Directory.CreateDirectory(finalPath);
+
+						using (var fileStream = new FileStream(Path.Combine(finalPath, fileName), FileMode.Create))
+						{
+							await file.CopyToAsync(fileStream);
+						}
+
+						TbBookImage bookImage = new()
+						{
+							ImageUrl = @"\" + bookPath + @"\" + fileName,
+							BookId = bookModel.Id,
+						};
+
+						bookViewModel.BookImages.Add(bookImage);
+					}
+					// save the new images
+					bookModel.BookImages = bookViewModel.BookImages;
+					_unitOfWork.Book.Update(bookModel);
+					await _unitOfWork.SaveAsync();
+
 					TempData["success"] = "Book created successfully!";
 					return RedirectToAction("Index");
 				}
@@ -125,8 +143,16 @@ namespace BulkyWeb.Areas.Admin.Controllers
 						Id = x.Id,
 						Name = x.Name
 					}).ToList();
-
 				bookViewModel.Categories = categories;
+
+				List<TbBookImage> bookImages = _unitOfWork.
+					BookImage
+					.FindAllQueryable(x => x.BookId == id)
+					.Select(x => new TbBookImage()
+					{
+						ImageUrl = x.ImageUrl,
+					}).ToList();
+				bookViewModel.BookImages = bookImages;
 
 				return View(bookViewModel);
 			}
@@ -140,7 +166,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(int id, AddEditBookViewModel bookViewModel, IFormFile? file)
+		public async Task<IActionResult> Edit(int id, AddEditBookViewModel bookViewModel, List<IFormFile>? files)
 		{
 			if (ModelState.IsValid)
 			{
@@ -174,6 +200,34 @@ namespace BulkyWeb.Areas.Admin.Controllers
 						string imageUrl = @"uploads\images\books\" + fileName;
 						bookModel.ImageUrl = imageUrl;
 					}*/
+
+					// save book images
+					if(files != null)
+					{
+						string wwwRootPath = _webHostEnvironment.WebRootPath;
+						foreach (var file in files)
+						{
+							string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+							string bookPath = @"uploads\images\books\book-" + bookModel.Id;
+							string finalPath = Path.Combine(wwwRootPath, bookPath);
+
+							if (!Directory.Exists(finalPath))
+								Directory.CreateDirectory(finalPath);
+
+							using (var fileStream = new FileStream(Path.Combine(finalPath, fileName), FileMode.Create))
+							{
+								await file.CopyToAsync(fileStream);
+							}
+
+							TbBookImage bookImage = new()
+							{
+								ImageUrl = @"\" + bookPath + @"\" + fileName,
+								BookId = bookModel.Id,
+							};
+
+							bookViewModel.BookImages.Add(bookImage);
+						}
+					}
 
 					Mapper.Map(bookViewModel, bookModel);
 

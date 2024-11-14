@@ -19,7 +19,7 @@ namespace Bulky.DataAccess.Data.Configurations
                 .IsRequired();
 
             builder.HasOne(x => x.Book)
-                .WithMany(x => x.Images)
+                .WithMany(x => x.BookImages)
                 .HasForeignKey(x => x.BookId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
