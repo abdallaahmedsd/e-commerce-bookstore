@@ -28,9 +28,6 @@ namespace Bulky.Models.ViewModels.Admin.Books
         [DisplayName("Price for +100 units")]
         public decimal Price100 { get; set; }
 
-        [DisplayName("Book Image")]
-        public string ImageUrl { get; set; } = null!;
-
 		public string Category { get; set; } = null!;
 	}
 }

@@ -45,10 +45,6 @@ namespace Bulky.Models.ViewModels.Admin.Books
         [DisplayName("Category")]
         public int CategoryId { get; set; }
 
-        //[Required(ErrorMessage = "You have to upload at least one image")]
-        [DisplayName("Book Image")]
-        public string? ImageUrl { get; set; } // = null!;
-
         public List<CategoryViewModel> Categories { get; set; } = [];
     }
 }

@@ -75,7 +75,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 					string imageUrl = @"uploads\images\books\" + fileName;
 
 					TbBook bookModel = new();
-					bookModel.ImageUrl = imageUrl;
+					// bookModel.ImageUrl = imageUrl;
 					Mapper.Map(bookViewModel, bookModel);
 
 					await _unitOfWork.Book.AddAsync(bookModel);
@@ -151,7 +151,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 					if (bookModel == null)
 						return NotFound();
 
-					if (file != null)
+					/*if (file != null)
 					{
 						// delete old image if the user selected a new image
 						string wwwRootPath = _webHostEnvironment.WebRootPath;
@@ -173,7 +173,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 						// update imageUrl
 						string imageUrl = @"uploads\images\books\" + fileName;
 						bookModel.ImageUrl = imageUrl;
-					}
+					}*/
 
 					Mapper.Map(bookViewModel, bookModel);
 

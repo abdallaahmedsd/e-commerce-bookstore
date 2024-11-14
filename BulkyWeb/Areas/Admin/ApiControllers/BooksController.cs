@@ -50,13 +50,13 @@ namespace BulkyWeb.Areas.Admin.ApiControllers
 				if (book == null)
 					return NotFound(new { success = false, message = $"There's no book with Id = ({id})" });
 
-				// Delete old image
-				string wwwRootPath = _webHostEnvironment.WebRootPath;
-				string oldImagePath = Path.Combine(wwwRootPath, book.ImageUrl);
-				if (System.IO.File.Exists(oldImagePath))
-				{
-					System.IO.File.Delete(oldImagePath);
-				}
+				//// Delete old image
+				//string wwwRootPath = _webHostEnvironment.WebRootPath;
+				//string oldImagePath = Path.Combine(wwwRootPath, book.ImageUrl);
+				//if (System.IO.File.Exists(oldImagePath))
+				//{
+				//	System.IO.File.Delete(oldImagePath);
+				//}
 
 				_unitOfWork.Book.Remove(book);
 				await _unitOfWork.SaveAsync();

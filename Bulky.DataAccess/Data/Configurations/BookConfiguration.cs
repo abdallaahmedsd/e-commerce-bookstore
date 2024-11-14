@@ -44,10 +44,6 @@ namespace Bulky.DataAccess.Data.Configurations
             builder.Property(x => x.CategoryId)
                 .IsRequired();
 
-            builder.Property(x => x.ImageUrl)
-                .HasMaxLength(200)
-                .IsRequired();
-
             builder.HasOne(x => x.Category)
                 .WithMany(x => x.Books)
                 .HasForeignKey(x => x.CategoryId)
@@ -72,7 +68,7 @@ namespace Bulky.DataAccess.Data.Configurations
                 Price50 = 85,
                 Price100 = 80,
                 CategoryId = 1,
-                ImageUrl = ""
+                //ImageUrl = ""
             },
             new() {
                 Id = 2,
@@ -85,7 +81,7 @@ namespace Bulky.DataAccess.Data.Configurations
                 Price50 = 25,
                 Price100 = 20,
                 CategoryId = 1,
-                ImageUrl = ""
+                //ImageUrl = ""
             },
             new() {
                 Id = 3,
@@ -98,7 +94,7 @@ namespace Bulky.DataAccess.Data.Configurations
                 Price50 = 40,
                 Price100 = 35,
                 CategoryId = 2,
-                ImageUrl = ""
+                //ImageUrl = ""
             },
             new() {
                 Id = 4,
@@ -111,7 +107,7 @@ namespace Bulky.DataAccess.Data.Configurations
                 Price50 = 60,
                 Price100 = 55,
                 CategoryId = 3,
-                ImageUrl = ""
+                //ImageUrl = ""
             },
             new() {
                 Id = 5,
@@ -124,7 +120,7 @@ namespace Bulky.DataAccess.Data.Configurations
                 Price50 = 25,
                 Price100 = 20,
                 CategoryId = 2,
-                ImageUrl = ""
+                //ImageUrl = ""
             },
             new() {
                 Id = 6,
@@ -137,7 +133,7 @@ namespace Bulky.DataAccess.Data.Configurations
                 Price50 = 22,
                 Price100 = 20,
                 CategoryId = 2,
-                ImageUrl = ""
+                //ImageUrl = ""
             }
         };
     }

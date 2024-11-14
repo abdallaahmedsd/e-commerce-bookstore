@@ -11,7 +11,5 @@
         public decimal ListPrice { get; set; }
 
         public decimal Price100 { get; set; }
-
-        public string ImageUrl { get; set; } = null!;
     }
 }
