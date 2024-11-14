@@ -18,6 +18,7 @@ namespace Bulky.DataAccess.Repository
             ApplicationUser = new ApplicationUserRepository(_context);
             Order = new OrderRepository(_context);
             OrderDetail = new OrderDetailRepository(_context);
+            BookImage = new BookImageRepository(_context);
         }
 
         public ICategoryRepository Category { get; private set; }
@@ -25,10 +26,9 @@ namespace Bulky.DataAccess.Repository
         public ICompanyRepository Company { get; private set; }
         public IShoppingCartRepository ShoppingCart { get; private set; }
         public IApplicationUserRepository ApplicationUser { get; private set; }
-
 		public IOrderRepository Order { get; private set; }
-
 		public IOrderDetailRepository OrderDetail { get; private set; }
+        public IBookImageRepository BookImage { get; private set; }
 
 		public async Task SaveAsync()
         {

@@ -21,6 +21,7 @@ namespace Bulky.DataAccess.Data
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<TbOrder> Orders { get; set; }
         public DbSet<TbOrderDetail> OrderDetails { get; set; }
+        public DbSet<TbBookImage> BookImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -9,7 +9,7 @@
         IApplicationUserRepository ApplicationUser { get; }
         IOrderRepository Order { get; }
         IOrderDetailRepository OrderDetail { get; }
-
+        IBookImageRepository BookImage { get; }
         Task SaveAsync();
     }
 }
