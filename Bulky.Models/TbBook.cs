@@ -21,6 +21,9 @@
         public decimal Price100 { get; set; }
 
         public int CategoryId { get; set; }
+
         public TbCategory Category { get; set; } = null!;
+
+        public ICollection<TbBookImage> Images { get; set; } = new List<TbBookImage>();
     }
 }
