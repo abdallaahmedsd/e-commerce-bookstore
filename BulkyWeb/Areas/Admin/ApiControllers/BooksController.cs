@@ -45,20 +45,30 @@ namespace BulkyWeb.Areas.Admin.ApiControllers
 
 			try
 			{
-				var book = await _unitOfWork.Book.GetByIdAsync(id);
+				var bookFromDb = await _unitOfWork.Book.GetByIdAsync(id);
 
-				if (book == null)
+				if (bookFromDb == null)
 					return NotFound(new { success = false, message = $"There's no book with Id = ({id})" });
 
-				//// Delete old image
-				//string wwwRootPath = _webHostEnvironment.WebRootPath;
-				//string oldImagePath = Path.Combine(wwwRootPath, book.ImageUrl);
-				//if (System.IO.File.Exists(oldImagePath))
-				//{
-				//	System.IO.File.Delete(oldImagePath);
-				//}
+				var bookImagesFromDb = await _unitOfWork.BookImage.FindAllAsync(x => x.BookId == bookFromDb.Id);
+				_unitOfWork.BookImage.RemoveRange(bookImagesFromDb);
 
-				_unitOfWork.Book.Remove(book);
+                // Delete old images
+                string bookPath = @"uploads\images\books\book-" + id;
+                string finalPath = Path.Combine(_webHostEnvironment.WebRootPath, bookPath);
+
+                if (Directory.Exists(finalPath))
+				{
+					string[] filePathes = Directory.GetFiles(finalPath);
+					foreach (string filePath in filePathes)
+					{
+						System.IO.File.Delete(filePath);
+					}
+
+					Directory.Delete(finalPath, true);
+				}
+
+				_unitOfWork.Book.Remove(bookFromDb);
 				await _unitOfWork.SaveAsync();
 				return Ok(new { success = true, message = "Book deleted successfully!" });
 			}
