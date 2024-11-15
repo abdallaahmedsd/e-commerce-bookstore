@@ -150,6 +150,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 					.FindAllQueryable(x => x.BookId == id)
 					.Select(x => new TbBookImage()
 					{
+						Id = x.Id,
 						ImageUrl = x.ImageUrl,
 					}).ToList();
 				bookViewModel.BookImages = bookImages;
@@ -309,5 +310,33 @@ namespace BulkyWeb.Areas.Admin.Controllers
 				return View("Error");
 			}
 		}
-	}
+
+		public async Task<IActionResult> DeleteImage(int imageId)
+		{
+			try
+			{
+				var bookImageFromDb = await _unitOfWork.BookImage.GetAsync(x => x.Id == imageId);
+
+                if (bookImageFromDb == null)
+                    return NotFound();
+
+				var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, bookImageFromDb.ImageUrl.Trim('\\'));
+
+				if(System.IO.File.Exists(oldImagePath))
+					System.IO.File.Delete(oldImagePath);
+
+				_unitOfWork.BookImage.Remove(bookImageFromDb);
+				await _unitOfWork.SaveAsync();
+
+				TempData["success"] = "Book image deleted successfully!";
+				return RedirectToAction(nameof(Edit), new {id = bookImageFromDb.BookId});
+            }
+            catch (Exception ex)
+            {
+                // Log exception (ex) here
+                TempData["error"] = "An error occurred while retrieving the book for deletion.";
+                return View("Error");
+            }
+        }
+    }
 }
