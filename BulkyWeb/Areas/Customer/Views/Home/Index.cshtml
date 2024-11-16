@@ -1,55 +1,52 @@
 ﻿@{
-	ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home Page";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/home.css" />
 }
 
 @model IEnumerable<BookHomeViewModel>
 
-<div class="row pb-3">
+<div class="grid-container">
     @foreach (var book in Model)
     {
-        <div class="col-lg-3 col-sm-6">
-            <div class="row p-2">
-                <div class="col-12 p-1">
-                    <div class="card border-0 p-3 shadow  border-top border-5 rounded"> 
-                       @*  @if(book.ProductImages!=null && book.ProductImages.Count() > 0) {
-                            <img src="@book.ProductImages.FirstOrDefault().ImageUrl" class="card-img-top rounded" />
-                        }
-                        else {
-                            <img src="https://placehold.co/500x600/png" class="card-img-top rounded" />
-                        } *@
-                        
-                        <div class="card-body pb-0">
-                            <div class="pl-1">
-                                <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@book.Title</p>
-                                <p class="card-title text-warning text-center">by <b>@book.Author</b></p>
-                            </div>
-                            <div class="pl-1">
-                                <p class="text-dark text-opacity-75 text-center mb-0">
-                                    List Price: 
-                                    <span class="text-decoration-line-through">
-                                        @book.ListPrice.ToString("c")
-                                    </span>
-                                </p>
-                            </div>
-                            <div class="pl-1">
-                                <p class="text-dark text-opacity-75 text-center">As low as: 
-                                    <span>
-                                        @book.Price100.ToString("c")
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-                        <div>
-                            <a asp-action="Details"
-                            asp-route-bookId="@book.Id"
-                            class="btn btn-primary bg-gradient border-0 form-control">
-                                Details
-                            </a>
-                        </div>
-                    </div>
-                </div>
+        <div class="card border-0 p-3 shadow border-top border-5 rounded">
+            @if (!string.IsNullOrEmpty(book.MainImageUrl))
+            {
+                <img src="@book.MainImageUrl" class="card-img-top rounded" />
+            }
+            else
+            {
+                <img src="https://placehold.co/500x600/png" class="card-img-top rounded" />
+            }
+
+            <div class="card-body">
+                <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">
+                    @book.Title
+                </p>
+                <p class="card-title text-warning text-center">
+                    by <b>@book.Author</b>
+                </p>
+                <p class="text-dark text-opacity-75 text-center mb-0">
+                    List Price:
+                    <span class="text-decoration-line-through">
+                        @book.ListPrice.ToString("c")
+                    </span>
+                </p>
+                <p class="text-dark text-opacity-75 text-center">
+                    As low as:
+                    <span>
+                        @book.Price100.ToString("c")
+                    </span>
+                </p>
             </div>
+
+            <a asp-action="Details"
+               asp-route-bookId="@book.Id"
+               class="btn btn-primary bg-gradient border-0 form-control">
+                Details
+            </a>
         </div>
     }
 </div>
-
