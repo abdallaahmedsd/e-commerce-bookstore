@@ -57,26 +57,29 @@
 				<span asp-validation-for="CategoryId" class="text-danger"></span>
 			</div>
 			<div class="form-floating py-2 col-12">
-
-				@* Handle book image in case of add or update *@
+				@* Handle the main book image in case of add or update *@
 				@if (Model.Id != 0)
 				{
-					<input type="file" name="files" class="form-control border-0 shadow" multiple />
-					<label asp-for="BookImages" class="ms-2"></label>
+					<input type="file" name="mainImage" class="form-control border-0 shadow" />
+					<label asp-for="MainImage" class="ms-2"></label>
 				}
 				else
 				{
 					<input class="form-control border-0 shadow input-validation-error"
 						   type="file"
 						   data-val="true"
-						   data-val-required="You have to upload at least one image"
-						   name="files"
-						   aria-describedby="files-error"
-						   aria-invalid="true" 
-						   multiple/>
-					<label asp-for="BookImages" class="ms-2"></label>
-					<span class="text-danger field-validation-error" data-valmsg-for="files" data-valmsg-replace="true"></span>
+						   data-val-required="You must add the main image"
+						   name="mainImage"
+						   aria-describedby="mainImage-error"
+						   aria-invalid="true"
+						   />
+					<label asp-for="MainImage" class="ms-2"></label>
+					<span class="text-danger field-validation-error" data-valmsg-for="mainImage" data-valmsg-replace="true"></span>
 				}
+			</div>
+			<div class="form-floating py-2 col-12">
+				<input type="file" name="files" class="form-control border-0 shadow" multiple />
+				<label asp-for="BookImages" class="ms-2"></label>
 			</div>
 			<hr />
 			<div class="row mt-3">

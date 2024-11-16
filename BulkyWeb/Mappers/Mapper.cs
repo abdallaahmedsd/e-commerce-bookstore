@@ -29,7 +29,6 @@ namespace BulkyWeb.Mappers
 			bookViewModel.Price = bookModel.Price;
 			bookViewModel.Price50 = bookModel.Price50;
 			bookViewModel.Price100 = bookModel.Price100;
-			//bookViewModel.ImageUrl = bookModel.ImageUrl;
 			bookViewModel.CategoryId = bookModel.CategoryId;
 		}
 

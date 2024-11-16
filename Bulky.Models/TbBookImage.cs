@@ -11,7 +11,7 @@ namespace Bulky.Models
         public int Id { get; set; }
         public string ImageUrl { get; set; } = null!;
         public int BookId { get; set; }
-
+        public bool IsMainImage { get; set; }
         public TbBook Book { get; set; }
     }
 }

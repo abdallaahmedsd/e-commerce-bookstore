@@ -45,7 +45,11 @@ namespace Bulky.Models.ViewModels.Admin.Books
         [DisplayName("Category")]
         public int CategoryId { get; set; }
 
-        public List<TbBookImage> BookImages { get; set; } = [];
+        [DisplayName("Main Image")]
+        public string? MainImage { get; set; }
+
+		[DisplayName("Other Images")]
+		public List<TbBookImage> BookImages { get; set; } = [];
 
         public List<CategoryViewModel> Categories { get; set; } = [];
     }

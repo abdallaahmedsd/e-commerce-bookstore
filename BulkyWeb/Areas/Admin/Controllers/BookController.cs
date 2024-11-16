@@ -9,8 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BulkyWeb.Areas.Admin.Controllers
 {
-    [Area(SD.Role_Admin)]
-    [Authorize(Roles  = SD.Role_Admin)]
+	[Area(SD.Role_Admin)]
+	[Authorize(Roles = SD.Role_Admin)]
 	public class BookController : Controller
 	{
 		private readonly IUnitOfWork _unitOfWork;
@@ -57,7 +57,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(AddEditBookViewModel bookViewModel, List<IFormFile> files)
+		public async Task<IActionResult> Create(AddEditBookViewModel bookViewModel, IFormFile mainImage, List<IFormFile> files)
 		{
 			if (ModelState.IsValid)
 			{
@@ -70,34 +70,13 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
 					await _unitOfWork.SaveAsync();
 
-					// save book images
-					string wwwRootPath = _webHostEnvironment.WebRootPath;
-					foreach(var file in files)
-					{
-						string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-						string bookPath = @"uploads\images\books\book-" + bookModel.Id; 
-						string finalPath = Path.Combine(wwwRootPath, bookPath);
+					#region Save book iamges 
+					await _HandleBookImages(bookModel.Id, bookViewModel, mainImage, files);
 
-						if(!Directory.Exists(finalPath))
-							Directory.CreateDirectory(finalPath);
-
-						using (var fileStream = new FileStream(Path.Combine(finalPath, fileName), FileMode.Create))
-						{
-							await file.CopyToAsync(fileStream);
-						}
-
-						TbBookImage bookImage = new()
-						{
-							ImageUrl = @"\" + bookPath + @"\" + fileName,
-							BookId = bookModel.Id,
-						};
-
-						bookViewModel.BookImages.Add(bookImage);
-					}
-					// save the new images
 					bookModel.BookImages = bookViewModel.BookImages;
 					_unitOfWork.Book.Update(bookModel);
 					await _unitOfWork.SaveAsync();
+					#endregion
 
 					TempData["success"] = "Book created successfully!";
 					return RedirectToAction("Index");
@@ -167,7 +146,7 @@ namespace BulkyWeb.Areas.Admin.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(int id, AddEditBookViewModel bookViewModel, List<IFormFile>? files)
+		public async Task<IActionResult> Edit(int id, AddEditBookViewModel bookViewModel, IFormFile? mainImage, List<IFormFile>? files)
 		{
 			if (ModelState.IsValid)
 			{
@@ -178,62 +157,34 @@ namespace BulkyWeb.Areas.Admin.Controllers
 					if (bookModel == null)
 						return NotFound();
 
-					/*if (file != null)
-					{
-						// delete old image if the user selected a new image
-						string wwwRootPath = _webHostEnvironment.WebRootPath;
-						string oldImagePath = Path.Combine(wwwRootPath, bookModel.ImageUrl);
-						if (System.IO.File.Exists(oldImagePath))
-						{
-							System.IO.File.Delete(oldImagePath);
-						}
-
-						// save the new image
-						string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-						string bookPath = Path.Combine(wwwRootPath, @"uploads\images\books\");
-
-						using (var fileStream = new FileStream(Path.Combine(bookPath, fileName), FileMode.Create))
-						{
-							await file.CopyToAsync(fileStream);
-						}
-
-						// update imageUrl
-						string imageUrl = @"uploads\images\books\" + fileName;
-						bookModel.ImageUrl = imageUrl;
-					}*/
-
 					// save book images
-					if(files != null)
+					if(mainImage != null)
 					{
-						string wwwRootPath = _webHostEnvironment.WebRootPath;
-						foreach (var file in files)
+						// if the main image chaneged
+						// remove the old main image from the database and from the hard desk as well
+						var oldImageFromDb = await _unitOfWork.BookImage.GetAsync(x => x.BookId == id && x.IsMainImage);
+						if (oldImageFromDb != null)
 						{
-							string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-							string bookPath = @"uploads\images\books\book-" + bookModel.Id;
-							string finalPath = Path.Combine(wwwRootPath, bookPath);
+							//// Delete old image
+							string wwwRootPath = _webHostEnvironment.WebRootPath;
 
-							if (!Directory.Exists(finalPath))
-								Directory.CreateDirectory(finalPath);
+							string fullPath = Path.Combine(wwwRootPath, oldImageFromDb.ImageUrl.Trim('\\'));
 
-							using (var fileStream = new FileStream(Path.Combine(finalPath, fileName), FileMode.Create))
+							if (System.IO.File.Exists(fullPath))
 							{
-								await file.CopyToAsync(fileStream);
+								System.IO.File.Delete(fullPath);
 							}
-
-							TbBookImage bookImage = new()
-							{
-								ImageUrl = @"\" + bookPath + @"\" + fileName,
-								BookId = bookModel.Id,
-							};
-
-							bookViewModel.BookImages.Add(bookImage);
+							_unitOfWork.BookImage.Remove(oldImageFromDb);
 						}
 					}
+
+					await _HandleBookImages(id, bookViewModel, mainImage, files);
 
 					Mapper.Map(bookViewModel, bookModel);
 
 					_unitOfWork.Book.Update(bookModel);
 					await _unitOfWork.SaveAsync();
+
 					TempData["success"] = "Book updated successfully!";
 					return RedirectToAction("Index");
 				}
@@ -317,26 +268,76 @@ namespace BulkyWeb.Areas.Admin.Controllers
 			{
 				var bookImageFromDb = await _unitOfWork.BookImage.GetAsync(x => x.Id == imageId);
 
-                if (bookImageFromDb == null)
-                    return NotFound();
+				if (bookImageFromDb == null)
+					return NotFound();
 
 				var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, bookImageFromDb.ImageUrl.Trim('\\'));
 
-				if(System.IO.File.Exists(oldImagePath))
+				if (System.IO.File.Exists(oldImagePath))
 					System.IO.File.Delete(oldImagePath);
 
 				_unitOfWork.BookImage.Remove(bookImageFromDb);
 				await _unitOfWork.SaveAsync();
 
 				TempData["success"] = "Book image deleted successfully!";
-				return RedirectToAction(nameof(Edit), new {id = bookImageFromDb.BookId});
-            }
-            catch (Exception ex)
-            {
-                // Log exception (ex) here
-                TempData["error"] = "An error occurred while retrieving the book for deletion.";
-                return View("Error");
-            }
-        }
-    }
+				return RedirectToAction(nameof(Edit), new { id = bookImageFromDb.BookId });
+			}
+			catch (Exception ex)
+			{
+				// Log exception (ex) here
+				TempData["error"] = "An error occurred while retrieving the book for deletion.";
+				return View("Error");
+			}
+		}
+
+		private async Task _HandleBookImages(int bookId, AddEditBookViewModel bookViewModel, IFormFile? mainImage, List<IFormFile>? files)
+		{
+			try
+			{
+				string wwwRootPath = _webHostEnvironment.WebRootPath;
+				string bookPath = @"uploads\images\books\book-" + bookId;
+				string finalPath = Path.Combine(wwwRootPath, bookPath);
+
+				if (!Directory.Exists(finalPath))
+					Directory.CreateDirectory(finalPath);
+
+				// save the main image
+				if (mainImage != null)
+				{
+					await _CopayImage(mainImage, true);
+				}
+
+				// save others book images
+				if (files != null)
+				{
+					foreach (var file in files)
+					{
+						await _CopayImage(file);
+					}
+				}
+
+				async Task _CopayImage(IFormFile file, bool isMainImage = false)
+				{
+					string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+					using (var fileStream = new FileStream(Path.Combine(finalPath, fileName), FileMode.Create))
+					{
+						await file.CopyToAsync(fileStream);
+					}
+
+					TbBookImage bookImage = new()
+					{
+						ImageUrl = @"\" + bookPath + @"\" + fileName,
+						BookId = bookId,
+						IsMainImage = isMainImage
+					};
+
+					bookViewModel.BookImages.Add(bookImage);
+				}
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+		}
+	}
 }
