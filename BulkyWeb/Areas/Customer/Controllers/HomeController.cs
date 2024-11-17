@@ -54,7 +54,7 @@ namespace BulkyWeb.Areas.Customer.Controllers
 
             try
             {
-                var bookModel = await _unitOfWork.Book.GetByIdAsync(bookId, "Category");
+                var bookModel = await _unitOfWork.Book.GetByIdAsync(bookId, "Category,BookImages");
 
                 if (bookModel == null)
                     return NotFound();

@@ -43,6 +43,12 @@ namespace BulkyWeb.Areas.Customer.Controllers
 
                 _CalcOrderTotal(ShoppingCartViewModel);
 
+                // get the main book image
+                foreach(var cart in shoppingCarts)
+                {
+                    cart.Book.BookImages = (await _unitOfWork.BookImage.FindAllAsync(x => x.BookId == cart.BookId && x.IsMainImage)).ToList();
+                }
+
                 return View(ShoppingCartViewModel);
             }
             catch (Exception ex)

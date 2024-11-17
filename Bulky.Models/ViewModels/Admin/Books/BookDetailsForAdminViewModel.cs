@@ -29,5 +29,7 @@ namespace Bulky.Models.ViewModels.Admin.Books
         public decimal Price100 { get; set; }
 
 		public string Category { get; set; } = null!;
+
+        public List<TbBookImage> BookImages { get; set; } = [];
 	}
 }

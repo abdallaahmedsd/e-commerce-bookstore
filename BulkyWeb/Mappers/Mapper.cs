@@ -57,8 +57,8 @@ namespace BulkyWeb.Mappers
 			bookDetailsViewModel.Price = bookModel.Price;
 			bookDetailsViewModel.Price50 = bookModel.Price50;
 			bookDetailsViewModel.Price100 = bookModel.Price100;
-			//bookDetailsViewModel.ImageUrl = bookModel.ImageUrl;
 			bookDetailsViewModel.Category = bookModel.Category.Name;
+			bookDetailsViewModel.BookImages = bookModel.BookImages.ToList();
 		}
 
 		public static void Map(TbCompany companyModel, CompanyViewModel companyViewModel)
