@@ -124,14 +124,9 @@ namespace BulkyWeb.Areas.Admin.Controllers
 					}).ToList();
 				bookViewModel.Categories = categories;
 
-				List<TbBookImage> bookImages = _unitOfWork.
-					BookImage
-					.FindAllQueryable(x => x.BookId == id)
-					.Select(x => new TbBookImage()
-					{
-						Id = x.Id,
-						ImageUrl = x.ImageUrl,
-					}).ToList();
+				List<TbBookImage> bookImages = (await _unitOfWork.BookImage.FindAllAsync(x => x.BookId == id))
+					.OrderByDescending(x => x.IsMainImage)
+					.ToList();
 				bookViewModel.BookImages = bookImages;
 
 				return View(bookViewModel);
@@ -285,7 +280,39 @@ namespace BulkyWeb.Areas.Admin.Controllers
 			catch (Exception ex)
 			{
 				// Log exception (ex) here
-				TempData["error"] = "An error occurred while retrieving the book for deletion.";
+				TempData["error"] = "An error occurred while dleteing the book iamge.";
+				return View("Error");
+			}
+		}
+
+		public async Task<IActionResult> SetMainImage(int imageId)
+		{
+			try
+			{
+				var bookImageFromDb = await _unitOfWork.BookImage.GetAsync(x => x.Id == imageId);
+
+				if (bookImageFromDb == null)
+					return NotFound();
+
+				// set the old main image to false
+				var oldMainImage = await _unitOfWork.BookImage.GetAsync(x => x.BookId == bookImageFromDb.BookId && x.IsMainImage);
+				if (oldMainImage != null)
+				{
+					oldMainImage.IsMainImage = false;
+					_unitOfWork.BookImage.Update(oldMainImage);
+				}
+
+				bookImageFromDb.IsMainImage = true;
+				_unitOfWork.BookImage.Update(bookImageFromDb);
+				await _unitOfWork.SaveAsync();
+
+				TempData["success"] = "Book image set to main image successfully!";
+				return RedirectToAction(nameof(Edit), new { id = bookImageFromDb.BookId });
+			}
+			catch (Exception ex)
+			{
+				// Log exception (ex) here
+				TempData["error"] = "An error occurred while set the book image to main image.";
 				return View("Error");
 			}
 		}
