@@ -51,11 +51,17 @@ builder.Services.AddSession(options =>
 });
 #endregion
 
-#region Facebook Authentication
+#region External Login Facebook/Microsoft Authentication
 builder.Services.AddAuthentication().AddFacebook(options =>
 {
     options.AppId = builder.Configuration.GetSection("Facebook:AppId").Value;
     options.AppSecret = builder.Configuration.GetSection("Facebook:AppSecret").Value;
+});
+
+builder.Services.AddAuthentication().AddMicrosoftAccount(options =>
+{
+	options.ClientId = builder.Configuration.GetSection("Microsoft:ClientId").Value;
+	options.ClientSecret = builder.Configuration.GetSection("Microsoft:ClientSecret").Value;
 });
 #endregion
 
