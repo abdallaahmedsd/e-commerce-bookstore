@@ -15,18 +15,6 @@ namespace Bulky.DataAccess.Data.Configurations
                 .IsRequired();
 
             builder.ToTable("Categories");
-
-            builder.HasData(SeedCategory());
-        }
-
-        private static List<TbCategory> SeedCategory()
-        {
-            return
-            [
-                new TbCategory { Id = 1, Name = "Action", DisplayOrder = 1},
-                new TbCategory { Id = 2, Name = "SciFi", DisplayOrder = 2},
-                new TbCategory { Id = 3, Name = "History", DisplayOrder = 3}
-            ];
         }
     }
 }

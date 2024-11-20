@@ -41,40 +41,5 @@ internal class CompanyConfiguration : IEntityTypeConfiguration<TbCompany>
 		});
 
 		builder.ToTable("Companies");
-
-		// Seed data for the TbCompany and AddressInfo
-		builder.HasData(
-			new TbCompany { Id = 1, Name = "Tech Innovations", PhoneNumber = "30282123" },
-			new TbCompany { Id = 2, Name = "Global Solutions", PhoneNumber = "40011255" },
-			new TbCompany { Id = 3, Name = "Future Enterprises", PhoneNumber = "50077777" }
-		);
-
-		// Seed data for AddressInfo as part of TbCompany (using the key)
-		builder.OwnsOne(x => x.AddressInfo).HasData(
-			new
-			{
-				TbCompanyId = 1,
-				City = "Doha",
-				State = "Qatar",
-				StreetAddress = "123 Tech Street",
-				PostalCode = "10001"
-			},
-			new
-			{
-				TbCompanyId = 2,
-				City = "New York",
-				State = "NY",
-				StreetAddress = "456 Global Ave",
-				PostalCode = "10002"
-			},
-			new
-			{
-				TbCompanyId = 3,
-				City = "Berlin",
-				State = "Berlin",
-				StreetAddress = "789 Future Blvd",
-				PostalCode = "10003"
-			}
-		);
 	}
 }
