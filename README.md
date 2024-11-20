@@ -26,13 +26,20 @@ This is an E-Commerce Book Store built with ASP.NET Core MVC, .NET 8, C#, and En
 
 ## Technologies Used
 
-- **Frontend**: ASP.NET Core MVC
+- **Frontend**: HTML, CSS, JavaScript, BootStrap and ASP.NET Core MVC
 - **Backend**: ASP.NET Core MVC, Web API
 - **Database**: SQL Server, Entity Framework Core (Code First)
 - **Payment Integration**: Stripe
 - **User Authentication**: Facebook Login, Microsoft Login
 - **Design Patterns**: Repository, Unit of Work
 - **Architecture**: N-Tier Architecture
+
+## Default User Credentials
+
+For initial setup, the application includes a default admin user:
+
+- **Username**: `admin@gmail.com`
+- **Password**: `Admin123@`
 
 ## Prerequisites
 
