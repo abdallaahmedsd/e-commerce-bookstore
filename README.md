@@ -34,6 +34,13 @@ This is an E-Commerce Book Store built with ASP.NET Core MVC, .NET 8, C#, and En
 - **Design Patterns**: Repository, Unit of Work
 - **Architecture**: N-Tier Architecture
 
+## Default User Credentials
+
+For initial setup, the application includes a default admin user:
+
+- **Username**: `admin@gmail.com`
+- **Password**: `Admin123@`
+
 ## Prerequisites
 
 To run this application, you will need the following:
