@@ -591,7 +591,7 @@ namespace Bulky.DataAccess.Migrations
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.OwnsOne("Bulky.Models.Common.AddressInfo", "AddressInfo", b1 =>
+                    b.OwnsOne("Bulky.Models.Identity.ApplicationUser.AddressInfo#Bulky.Models.Common.AddressInfo", "AddressInfo", b1 =>
                         {
                             b1.Property<int>("ApplicationUserId")
                                 .HasColumnType("int");
@@ -618,7 +618,7 @@ namespace Bulky.DataAccess.Migrations
 
                             b1.HasKey("ApplicationUserId");
 
-                            b1.ToTable("AspNetUsers");
+                            b1.ToTable("AspNetUsers", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("ApplicationUserId");
@@ -684,7 +684,7 @@ namespace Bulky.DataAccess.Migrations
 
             modelBuilder.Entity("Bulky.Models.TbCompany", b =>
                 {
-                    b.OwnsOne("Bulky.Models.Common.AddressInfo", "AddressInfo", b1 =>
+                    b.OwnsOne("Bulky.Models.TbCompany.AddressInfo#Bulky.Models.Common.AddressInfo", "AddressInfo", b1 =>
                         {
                             b1.Property<int>("TbCompanyId")
                                 .HasColumnType("int");
@@ -711,7 +711,7 @@ namespace Bulky.DataAccess.Migrations
 
                             b1.HasKey("TbCompanyId");
 
-                            b1.ToTable("Companies");
+                            b1.ToTable("Companies", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("TbCompanyId");
