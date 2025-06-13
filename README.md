@@ -1,4 +1,4 @@
- E-Commerce Book Store
+# E-Commerce Book Store
 
 This is an E-Commerce Book Store built with ASP.NET Core MVC, .NET 8, C#, and Entity Framework Core (Code First). It includes features such as product management, user roles, secure online payments, and an admin panel to manage products, users, and orders.
 
